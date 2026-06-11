@@ -58,10 +58,30 @@
         .result-header > div { width: 30%; text-align: center; }
 
         #play-by-play { background: #0d1117; color: #2ecc71; font-family: monospace; height: 140px; max-height: 140px; overflow-y: auto; text-align: left; padding: 15px; margin-bottom: 20px; font-size: 1.2em; border-radius: 8px; border: 2px solid #34495e; line-height: 1.4; }
-        .stats-table-live { width: 100%; text-align: center; border-collapse: collapse; font-size: 1.1em; background: rgba(26,26,46,0.8); min-width: 750px; }
+        .stats-table-live { width: 100%; text-align: center; border-collapse: separate; border-spacing: 0; font-size: 1.1em; background: rgba(26,26,46,0.8); min-width: 700px; }
         .stats-table-live th { background: #34495e; color: #f1c40f; padding: 12px; font-weight: bold; border-bottom: 3px solid #7f8c8d; font-size: 1.1em; }
         .stats-table-live td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .stats-table-live tr:nth-child(even) { background: rgba(255,255,255,0.03); } 
+        
+        /* ZAMROŻONA PIERWSZA KOLUMNA Z NAZWISKAMI */
+        .stats-table-live th:first-child,
+        .stats-table-live td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 2;
+            box-shadow: 3px 0 6px rgba(0,0,0,0.6); /* Elegancki cień oddzielający kolumnę */
+            text-align: left; /* Wyrównanie nazwisk do lewej dla lepszej czytelności */
+        }
+        .stats-table-live th:first-child {
+            background-color: #34495e;
+            z-index: 3; /* Nagłówek musi być najwyżej */
+        }
+        .stats-table-live td:first-child {
+            background-color: #171c2e; /* Solidne tło zakrywające przesuwający się tekst */
+        }
+        .stats-table-live tr:nth-child(even) td:first-child {
+            background-color: #1c2238; /* Minimalnie jaśniejsze tło do efektu zebry */
+        }
 
         .summary-box { background: #1a1a2e; padding: 20px; border-radius: 10px; border: 2px dashed #f1c40f; margin-bottom: 20px; text-align: center;}
 
@@ -79,33 +99,52 @@
             #available-players { gap: 4px; margin: 6px 0; }
             .player-btn { padding: 4px 6px; font-size: 10px; border-radius: 4px; }
             .player-btn div { font-size: 1.1em !important; padding: 1px 4px !important; margin-top: 2px !important; }
-            .court-container { padding: 5px; border-radius: 6px; }
+            .court-container { padding: 5px; border-radius: 6px; margin-bottom: 50px; }
             .court-container h2 { font-size: 0.9em; margin-bottom: 2px; }
             .volleyball-court { height: 180px; padding: 2px; gap: 2px; border-width: 2px; }
             .player-slot { padding: 1px; font-size: 0.65em; border-width: 1px; border-radius: 4px; line-height: 1.1; }
             #slot-Środkowy2 { width: 100px !important; font-size: 0.65em !important; padding: 2px; margin-top: 4px; }
             
+            /* NAPRAWA WIDOKU MODALI NA TELEFON (Flex-start zapobiega obcinaniu góry) */
+            #coach-modal, #season-hub-modal, #season-summary-modal, #result-modal { 
+                justify-content: flex-start; padding-top: 10px; 
+            }
+            
             #coach-modal h1 { font-size: 1.8em !important; text-align: center;}
-            #season-hub-modal h1, #season-summary-modal h1 { font-size: 1.5em !important; text-align: center;}
+            #season-hub-modal h1, #season-summary-modal h1 { font-size: 1.4em !important; text-align: center; margin-bottom: 0;}
+            #season-round-info { font-size: 1.1em !important; margin-bottom: 5px; margin-top: 5px; }
             
-            .table-responsive { width: 100%; border-radius: 5px; margin-bottom: 15px; }
-            .standings-table { font-size: 1.1em; min-width: 650px; } 
-            .standings-table th, .standings-table td { padding: 10px 6px; }
+            /* KOMPAKTOWA TABELA LIGOWA */
+            .table-responsive { width: 100%; border-radius: 5px; margin-bottom: 10px; }
+            .standings-table { font-size: 0.85em; min-width: 500px; } 
+            .standings-table th, .standings-table td { padding: 6px 4px; }
             
-            #btn-next-match, #btn-start-league-now { width: 100%; padding: 12px !important; font-size: 1.1em !important; }
+            /* --- MAGIA UX: PRZYKLEJONE PRZYCISKI (STICKY) NA DOLE EKRANU --- */
+            #btn-next-match, #btn-start-league-now, #btn-return-hub { 
+                width: 95%; padding: 12px !important; font-size: 1.1em !important; 
+                position: sticky; bottom: 10px; z-index: 500; 
+                margin: 5px auto 0 auto !important; display: block;
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
+            }
             
-            .modal-inner { padding: 10px; width: 98%; margin: 10px auto; border-radius: 8px;}
-            .result-header { flex-direction: column; gap: 4px; padding-bottom: 5px; border-bottom: none;}
-            .result-header > div { width: 100%; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); padding: 6px 12px; border-radius: 6px; }
-            .result-header h2 { font-size: 1.1em !important; margin: 0; text-align: left; }
-            .result-header span { font-size: 1.6em !important; margin: 0; text-align: right; }
-            .result-header > div:nth-child(2) { background: #1a1a2e; border: 1px solid #f1c40f; flex-direction: column; padding: 8px; }
-            .result-header > div:nth-child(2) h3 { font-size: 1em; }
-            .result-header > div:nth-child(2) div { font-size: 1.8em !important; padding: 0 !important; }
-            #time-controls { flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-            #time-controls button { flex-grow: 1; padding: 12px; font-size: 1em; width: 30%; }
-            #play-by-play { font-size: 0.9em; height: 100px; max-height: 100px; padding: 8px; margin-bottom: 10px; }
-            .stats-table-live { font-size: 0.9em; min-width: 600px; }
+            /* ULTRA-KOMPAKTOWY EKRAN MECZOWY */
+            .modal-inner { padding: 5px 8px; width: 100%; margin: 0 auto; border: none; border-radius: 5px;}
+            .result-header { flex-direction: row; gap: 4px; padding-bottom: 5px; margin-bottom: 5px; border-bottom: 1px solid #7f8c8d;}
+            .result-header > div { width: 33%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: transparent; padding: 2px; }
+            .result-header h2 { font-size: 0.85em !important; margin: 0; text-align: center; line-height: 1.1; }
+            .result-header span { font-size: 1.6em !important; margin: 0; text-align: center; }
+            .result-header > div:nth-child(2) { background: #1a1a2e; border: 1px solid #f1c40f; padding: 4px; border-radius: 6px; }
+            .result-header > div:nth-child(2) h3 { font-size: 0.8em; }
+            .result-header > div:nth-child(2) div { font-size: 1.4em !important; padding: 0 !important; }
+            
+            #time-controls { flex-wrap: wrap; gap: 4px; margin-bottom: 5px; }
+            #time-controls button { flex-grow: 1; padding: 8px; font-size: 0.9em; width: 30%; }
+            #play-by-play { font-size: 0.8em; height: 75px; max-height: 75px; padding: 5px; margin-bottom: 5px; line-height: 1.1; }
+            
+            /* MNIEJSZA TABELA STATYSTYK NA ŻYWO */
+            .stats-table-live { font-size: 0.75em; min-width: 450px; }
+            .stats-table-live th { padding: 4px 2px; border-bottom: 1px solid #7f8c8d; }
+            .stats-table-live td { padding: 4px 2px; }
         }
     </style>
 </head>
