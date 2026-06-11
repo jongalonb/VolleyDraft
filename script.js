@@ -1238,6 +1238,7 @@ const teams = [
     ]}
 ];
 
+// ... (TUTAJ NA GÓRZE ZOSTAWIASZ SWOJE BAZY TRENERÓW I ZESPOŁÓW) ...
 // ==========================================
 // ZMIENNE GRY I LOGIKA DRAFTU
 // ==========================================
@@ -1254,12 +1255,14 @@ let myRoster = {
 };
 
 let matchStats = {};
+let seasonStats = {}; // Globalna pamięć statystyk sezonu
 let myScore = 0, oppScore = 0, mySets = 0, oppSets = 0;
 let isMyServe = true, matchInterval = null, currentSpeed = 1000, matchFinished = false;
 
 let season = {
     teams: [], standings: {}, schedule: [], currentRound: 0,
-    isPlayoffs: false, playoffStage: "", playoffMatchups: [], myCurrentOpponent: null
+    isPlayoffs: false, playoffStage: "", playoffMatchups: [], myCurrentOpponent: null,
+    bonusesApplied: false, regularSeasonFinished: false, playerExitStage: null
 };
 
 window.onload = function() {
@@ -1442,7 +1445,7 @@ function skipTeam() {
 // SYSTEM LIGOWY I TERMINARZ
 // ==========================================
 function getTeamAverageOVR(teamObj) {
-    if(teamObj.isPlayer) return parseInt(document.getElementById("team-ovr").innerText);
+    if(teamObj.isPlayer) return parseInt(document.getElementById("team-ovr").innerText) || 75;
     let total = 0;
     let sortedPlayers = [...teamObj.originalRoster.players].sort((a,b) => b.OVR - a.OVR).slice(0,7);
     sortedPlayers.forEach(p => total += p.OVR);
@@ -1450,18 +1453,32 @@ function getTeamAverageOVR(teamObj) {
 }
 
 function initializeSeason() {
-    for (let pos in myRoster) {
-        let player = myRoster[pos];
-        if (player) {
-            if (currentCoach.type === "DEF_BOOST" && (pos === "Libero" || pos.includes("Przyjmujący"))) player.OBR += currentCoach.value;
-            if (currentCoach.type === "BLK_BOOST" && pos.includes("Środkowy")) player.BLK += currentCoach.value;
-            if (currentCoach.type === "TEC_BOOST") player.TEC += currentCoach.value;
-            if (currentCoach.type === "ATK_BOOST" && (pos === "Atakujący" || pos.includes("Przyjmujący"))) player.ATK += currentCoach.value;
-            if (currentCoach.type === "SRV_BOOST") player.ZAG += currentCoach.value;
-            if (currentCoach.type === "PRZ_BOOST" && (pos === "Libero" || pos.includes("Przyjmujący"))) player.PRZ += currentCoach.value;
+    season.teams = [];
+    season.standings = {};
+    season.schedule = [];
+    season.currentRound = 0;
+    season.isPlayoffs = false;
+    season.regularSeasonFinished = false;
+    season.playerExitStage = null;
+
+    if (!season.bonusesApplied) {
+        for (let pos in myRoster) {
+            let player = myRoster[pos];
+            if (player) {
+                if (currentCoach.type === "DEF_BOOST" && (pos === "Libero" || pos.includes("Przyjmujący"))) player.OBR += currentCoach.value;
+                if (currentCoach.type === "BLK_BOOST" && pos.includes("Środkowy")) player.BLK += currentCoach.value;
+                if (currentCoach.type === "TEC_BOOST") player.TEC += currentCoach.value;
+                if (currentCoach.type === "ATK_BOOST" && (pos === "Atakujący" || pos.includes("Przyjmujący"))) player.ATK += currentCoach.value;
+                if (currentCoach.type === "SRV_BOOST") player.ZAG += currentCoach.value;
+                if (currentCoach.type === "PRZ_BOOST" && (pos === "Libero" || pos.includes("Przyjmujący"))) player.PRZ += currentCoach.value;
+            }
         }
+        updateTeamStats();
+        season.bonusesApplied = true;
     }
-    updateTeamStats();
+
+    document.querySelector(".top-section").style.display = "none";
+    document.querySelector(".court-container").style.display = "none";
 
     let shuffled = [...teams].sort(() => 0.5 - Math.random());
     let aiTeams = shuffled.slice(0, 7);
@@ -1476,18 +1493,13 @@ function initializeSeason() {
 
     let n = 8;
     let tIds = [0, 1, 2, 3, 4, 5, 6, 7];
-    
     for (let round = 0; round < n - 1; round++) {
         let roundMatches = [];
-        for (let i = 0; i < n / 2; i++) {
-            roundMatches.push([ tIds[i], tIds[n - 1 - i] ]);
-        }
+        for (let i = 0; i < n / 2; i++) roundMatches.push([ tIds[i], tIds[n - 1 - i] ]);
         season.schedule.push(roundMatches);
         tIds.splice(1, 0, tIds.pop());
     }
 
-    season.currentRound = 0;
-    season.isPlayoffs = false;
     showSeasonHub();
 }
 
@@ -1499,9 +1511,15 @@ function showSeasonHub() {
         document.getElementById("season-round-info").innerText = "Faza Play-Off";
         renderPlayoffHub();
     } else {
-        document.getElementById("season-round-info").innerText = `Kolejka: ${season.currentRound + 1} / 7`;
-        document.getElementById("btn-next-match").innerText = "Zagraj Mecz Kolejki 🏐";
-        document.getElementById("btn-next-match").onclick = playLeagueRound;
+        if (season.currentRound === 7) {
+            document.getElementById("season-round-info").innerText = `Koniec Sezonu Zasadniczego`;
+            document.getElementById("btn-next-match").innerText = "Przejdź do Fazy Play-Off 🏆";
+            document.getElementById("btn-next-match").onclick = setupPlayoffs;
+        } else {
+            document.getElementById("season-round-info").innerText = `Kolejka: ${season.currentRound + 1} / 7`;
+            document.getElementById("btn-next-match").innerText = "Zagraj Mecz Kolejki 🏐";
+            document.getElementById("btn-next-match").onclick = playLeagueRound;
+        }
         renderLeagueTable();
     }
 }
@@ -1557,9 +1575,7 @@ function fastSimulateAIMatch(t1, t2) {
     let probT1 = 0.5 + ((t1.avgOvr - t2.avgOvr) * 0.025);
     probT1 = Math.max(0.15, Math.min(0.85, probT1)); 
     let s1 = 0, s2 = 0;
-    while(s1 < 3 && s2 < 3) {
-        if(Math.random() < probT1) s1++; else s2++;
-    }
+    while(s1 < 3 && s2 < 3) { if(Math.random() < probT1) s1++; else s2++; }
     return { s1: s1, s2: s2 };
 }
 
@@ -1578,7 +1594,7 @@ function updateStandings(name1, name2, sets1, sets2) {
 }
 
 // ==========================================
-// ROZGRYWKA MECZU GRACZA
+// KONTRASTOWY SILNIK MECZOWY GRACZA
 // ==========================================
 function setupPlayerMatch(opponent) {
     initStats();
@@ -1586,18 +1602,16 @@ function setupPlayerMatch(opponent) {
     
     document.getElementById("final-my-team").innerText = teamName;
     document.getElementById("opponent-name-final").innerText = opponent.teamName;
-    
-    // Zmiana na "block", żeby działał scroll w CSS!
     document.getElementById("result-modal").style.display = "block";
-    
     document.getElementById("btn-return-hub").style.display = "none";
     document.getElementById("time-controls").style.display = "flex";
-    document.getElementById("play-by-play").innerHTML = "Sędzia daje znak. Gramy!<br>";
     
     document.getElementById("score-my").innerText = "0";
     document.getElementById("score-opp").innerText = "0";
     document.getElementById("sets-my").innerText = "0";
     document.getElementById("sets-opp").innerText = "0";
+    
+    document.getElementById("play-by-play").innerHTML = "<span style='color:#bdc3c7;'>Sędzia daje znak. Zaczynamy!</span><br>";
     
     renderStatsTable();
     startMatchLoop();
@@ -1607,9 +1621,10 @@ function initStats() {
     for (let pos in myRoster) {
         let p = myRoster[pos];
         if (p) {
+            // Dodano przPoz do logiki statystyk
             matchStats[p.name] = {
                 name: p.name, pos: p.pos, ptsTot: 0, ptsBP: 0, wl: 0, srvTot: 0, srvErr: 0, srvAce: 0,
-                przTot: 0, przErr: 0, przExc: 0, atkTot: 0, atkErr: 0, atkBlk: 0, atkPkt: 0, blkPkt: 0
+                przTot: 0, przErr: 0, przExc: 0, przPoz: 0, atkTot: 0, atkErr: 0, atkBlk: 0, atkPkt: 0, blkPkt: 0
             };
         }
     }
@@ -1621,6 +1636,9 @@ function playSinglePoint() {
     const myPlayersArr = Object.values(myRoster).filter(p => p !== null);
     let oppOVR = season.myCurrentOpponent.avgOvr;
 
+    let teamBlk = parseInt(document.getElementById("team-blk").innerText) / 100;
+    let teamObr = parseInt(document.getElementById("team-obr").innerText) / 100;
+
     if (isMyServe) {
         let servers = myPlayersArr.filter(p => p.pos !== "Libero");
         let server = servers[Math.floor(Math.random() * servers.length)];
@@ -1629,109 +1647,156 @@ function playSinglePoint() {
         sStats.srvTot++;
         let srvRoll = Math.random() * 100;
         
-        if (srvRoll < (server.ZAG / 10)) { 
+        if (srvRoll < (server.ZAG / 9)) { 
             sStats.srvAce++; sStats.ptsTot++; sStats.ptsBP++; sStats.wl++;
-            actionLog = `AS SERWISOWY! ${server.name} punktuje bezpośrednio!`; pointForMe = true;
-        } else if (srvRoll > (100 - (100 - server.ZAG) / 2)) {
+            actionLog = `AS SERWISOWY! ${server.name} posyła atomowe uderzenie!`; pointForMe = true;
+        } else if (srvRoll > (100 - (100 - server.ZAG) / 3)) {
             sStats.srvErr++; sStats.wl--;
-            actionLog = `Błąd na zagrywce. ${server.name} psuje serwis.`; pointForMe = false;
+            actionLog = `Błąd zagrywki. ${server.name} uderza w siatkę.`; pointForMe = false;
         } else {
-            let oppKillChance = 0.38 + ((oppOVR - 75) * 0.012); 
-            let oppAtkRoll = Math.random();
-            
-            if (oppAtkRoll < oppKillChance) { 
-                actionLog = `Skuteczny atak przeciwników.`; pointForMe = false;
-            } else if (oppAtkRoll < oppKillChance + 0.12) { 
-                actionLog = `Błąd przeciwnika w ataku! Punkt dla nas.`; pointForMe = true;
-            } else if (oppAtkRoll < oppKillChance + 0.24) { 
-                let blockers = myPlayersArr.filter(p => p.pos.includes("Środkowy") || p.pos === "Atakujący" || p.pos.includes("Przyjmujący"));
-                let blocker = blockers[Math.floor(Math.random() * blockers.length)];
-                if (Math.random() < 0.6) {
-                    let middles = myPlayersArr.filter(p => p.pos.includes("Środkowy"));
-                    if (middles.length > 0) blocker = middles[Math.floor(Math.random() * middles.length)];
-                }
+            let oppAtkPower = oppOVR / 100;
+            let roll = Math.random();
+            let blockChance = 0.08 + (teamBlk * 0.06); 
+            let oppErrorChance = 0.09 - ((oppOVR - 75) * 0.001);
+
+            if (roll < blockChance) { 
+                let middles = myPlayersArr.filter(p => p.pos.includes("Środkowy"));
+                let blocker = middles.length > 0 && Math.random() < 0.65 ? middles[Math.floor(Math.random() * middles.length)] : myPlayersArr.filter(p => p.pos !== "Libero")[Math.floor(Math.random() * myPlayersArr.filter(p => p.pos !== "Libero").length)];
                 let bStats = matchStats[blocker.name];
                 bStats.blkPkt++; bStats.ptsTot++; bStats.ptsBP++; bStats.wl++;
-                actionLog = `PUNKTOWY BLOK! ${blocker.name} zatrzymuje atak!`; pointForMe = true;
-            } else {
-                let attackers = myPlayersArr.filter(p => p.pos !== "Libero" && p.pos !== "Rozgrywający");
-                let attacker = attackers[Math.floor(Math.random() * attackers.length)];
+                actionLog = `MONSTER BLOK! ${blocker.name} zatrzymuje atak rywalek!`; pointForMe = true;
+            } else if (roll < blockChance + oppErrorChance) { 
+                actionLog = `Przeciwnik atakuje bez bloku w aut! Punkt dla nas.`; pointForMe = true;
+            } else if (roll < 0.52 + (oppAtkPower * 0.05)) { 
+                actionLog = `Rywalki skutecznie kończą akcję na skrzydle.`; pointForMe = false;
+            } else { 
+                // --- DYSTRYBUCJA 60% NA PRZYJMUJĄCE W KONTRZE ---
+                let rollAtk = Math.random();
+                let attacker;
+                let atakujacy = myPlayersArr.filter(p => p.pos === "Atakujący");
+                let przyjmujacy = myPlayersArr.filter(p => p.pos.includes("Przyjmujący"));
+                let srodkowi = myPlayersArr.filter(p => p.pos.includes("Środkowy"));
+
+                if (rollAtk < 0.60 && przyjmujacy.length > 0) attacker = przyjmujacy[Math.floor(Math.random() * przyjmujacy.length)];
+                else if (rollAtk < 0.90 && atakujacy.length > 0) attacker = atakujacy[0];
+                else if (srodkowi.length > 0) attacker = srodkowi[Math.floor(Math.random() * srodkowi.length)];
+                else attacker = myPlayersArr.filter(p => p.pos !== "Libero" && p.pos !== "Rozgrywający")[0];
+
                 let aStats = matchStats[attacker.name];
                 aStats.atkTot++;
                 
                 let atkPower = (attacker.ATK * 0.55 + attacker.TEC * 0.45) / 100;
+                let counterRoll = Math.random();
                 
-                if (Math.random() < (atkPower * 0.45)) { 
-                    aStats.atkPkt++; aStats.ptsTot++; sStats.ptsBP++; sStats.wl++;
-                    actionLog = `Obrona i skuteczna kontra! ${attacker.name} punktuje!`; pointForMe = true;
-                } else if (Math.random() > 0.85) {
+                // SKUTECZNOŚĆ COFNIĘTA DO OPTYMALNEGO 0.48
+                if (counterRoll < (atkPower * 0.48)) { 
+                    aStats.atkPkt++; aStats.ptsTot++; sStats.ptsBP++; aStats.wl++;
+                    actionLog = `Znakomite podbicie w obronie i kontra! ${attacker.name} punktuje!`; pointForMe = true;
+                } else if (counterRoll > 0.85) { 
                     aStats.atkErr++; aStats.wl--;
-                    actionLog = `Błąd w kontrataku. ${attacker.name} w aut.`; pointForMe = false;
-                } else {
+                    actionLog = `Kontra zerwana. ${attacker.name} bije w aut.`; pointForMe = false;
+                } else if (counterRoll > 0.75) {
                     aStats.atkBlk++; aStats.wl--;
-                    actionLog = `${attacker.name} zablokowana przy próbie kontry!`; pointForMe = false;
+                    actionLog = `Nasz atak z kontry zatrzymany szczelnym blokiem.`; pointForMe = false;
+                } else {
+                    actionLog = `Przeciwniczki bronią naszą kontrę. Punkt dla rywalek.`; pointForMe = false;
                 }
             }
         }
     } else { 
-        let receivers = myPlayersArr.filter(p => p.pos === "Libero" || p.pos.includes("Przyjmujący"));
-        let receiver = receivers[Math.floor(Math.random() * receivers.length)];
-        let rStats = matchStats[receiver.name];
-        rStats.przTot++;
-
         let srvRollOpp = Math.random() * 100;
-        let oppAceChance = 4 + ((oppOVR - 75) * 0.2);
-        
-        if (srvRollOpp < oppAceChance) { 
-            rStats.przErr++; rStats.wl--;
-            actionLog = `As rywali. ${receiver.name} nie daje rady w przyjęciu.`; pointForMe = false;
-        } else if (srvRollOpp > 92) {
-            actionLog = `Przeciwnik psuje zagrywkę! Punkt dla nas.`; pointForMe = true;
-        } else {
-            if (Math.random() * 100 < receiver.PRZ) { rStats.przExc++; }
+        let oppAceChance = 4 + ((oppOVR - 75) * 0.15);
+        let oppErrChance = 8 - ((oppOVR - 75) * 0.1);
 
-            let attackers = myPlayersArr.filter(p => p.pos !== "Libero" && p.pos !== "Rozgrywający");
-            let attacker = attackers[Math.floor(Math.random() * attackers.length)];
+        if (srvRollOpp < oppAceChance) { 
+            let receivers = myPlayersArr.filter(p => p.pos === "Libero" || p.pos.includes("Przyjmujący"));
+            let receiver = receivers[Math.floor(Math.random() * receivers.length)];
+            matchStats[receiver.name].przTot++;
+            matchStats[receiver.name].przErr++;
+            matchStats[receiver.name].wl--;
+            actionLog = `As serwisowy przeciwniczek. ${receiver.name} zaskoczona w przyjęciu.`; pointForMe = false;
+        } else if (srvRollOpp > 100 - oppErrChance) { 
+            actionLog = `Przeciwniczki psują serwis na nasze szczęście! Punkt.`; pointForMe = true;
+        } else { 
+            let receivers = myPlayersArr.filter(p => p.pos === "Libero" || p.pos.includes("Przyjmujący"));
+            let receiver = receivers[Math.floor(Math.random() * receivers.length)];
+            let rStats = matchStats[receiver.name];
+            rStats.przTot++;
+
+            let passRoll = Math.random() * 100;
+            let perfectPass = false;
+            
+            if (passRoll < receiver.PRZ) { 
+                rStats.przExc++; 
+                rStats.przPoz++; 
+                perfectPass = true;
+            } else if (passRoll < receiver.PRZ + 20) {
+                rStats.przPoz++;
+            }
+
+            let rollAtk = Math.random();
+            let attacker;
+            let atakujacy = myPlayersArr.filter(p => p.pos === "Atakujący");
+            let przyjmujacy = myPlayersArr.filter(p => p.pos.includes("Przyjmujący"));
+            let srodkowi = myPlayersArr.filter(p => p.pos.includes("Środkowy"));
+
+            let srodkowySzansa = perfectPass ? 0.35 : 0.10; 
+            
+            if (rollAtk < srodkowySzansa && srodkowi.length > 0) attacker = srodkowi[Math.floor(Math.random() * srodkowi.length)];
+            else if (rollAtk < srodkowySzansa + 0.35 && atakujacy.length > 0) attacker = atakujacy[0];
+            else if (przyjmujacy.length > 0) attacker = przyjmujacy[Math.floor(Math.random() * przyjmujacy.length)];
+            else attacker = myPlayersArr.filter(p => p.pos !== "Libero" && p.pos !== "Rozgrywający")[0];
+
             let aStats = matchStats[attacker.name];
             aStats.atkTot++;
 
-            let atkPower = (attacker.ATK * 0.55 + attacker.TEC * 0.45) / 100;
-            if (rStats.przExc > 0) { atkPower *= 1.2; } 
+            let myAtkPower = (attacker.ATK * 0.55 + attacker.TEC * 0.45) / 100;
+            if (perfectPass) myAtkPower *= 1.25; 
 
-            let finalKill = (atkPower * 0.55) - ((oppOVR - 75) * 0.005); 
             let myAtkRoll = Math.random();
+            let killChance = myAtkPower * 0.53; 
 
-            if (myAtkRoll < finalKill) { 
+            if (myAtkRoll < killChance) { 
                 aStats.atkPkt++; aStats.ptsTot++; aStats.wl++;
-                actionLog = `Skuteczny side-out! ${attacker.name} kończy atak.`; pointForMe = true;
-            } else if (myAtkRoll > 0.88) {
+                actionLog = `Świetna pierwsza akcja! ${attacker.name} wbija gwoździa!`; pointForMe = true;
+            } else if (myAtkRoll > 0.86) { 
                 aStats.atkErr++; aStats.wl--;
-                actionLog = `Niestety błąd. ${attacker.name} psuje uderzenie po przyjęciu.`; pointForMe = false;
-            } else if (myAtkRoll > 0.78) {
+                actionLog = `Atak w siatkę. ${attacker.name} nie przebija piłki.`; pointForMe = false;
+            } else if (myAtkRoll > 0.75) { 
                 aStats.atkBlk++; aStats.wl--;
-                actionLog = `${attacker.name} powstrzymana przez blok przeciwnika.`; pointForMe = false;
-            } else {
-                actionLog = `Przeciwnicy bronią i wyprowadzają skuteczną kontrę.`; pointForMe = false;
+                actionLog = `${attacker.name} nadziała się na szczelny blok rywalek!`; pointForMe = false;
+            } else { 
+                if (Math.random() < (teamObr * 0.38)) { 
+                    if (Math.random() < 0.6) {
+                        aStats.atkPkt++; aStats.ptsTot++; aStats.wl++;
+                        actionLog = `Obroniony kontratak rywalek i ponowny atak ${attacker.name} daje nam punkt!`; pointForMe = true;
+                    } else {
+                        actionLog = `Długa wymiana pełna podbić, ale ostatecznie tracimy punkt.`; pointForMe = false;
+                    }
+                } else {
+                    actionLog = `Rywalki podbijają i wyprowadzają natychmiastową kontrę.`; pointForMe = false;
+                }
             }
         }
     }
 
-    if (pointForMe) { myScore++; isMyServe = true; } 
-    else { oppScore++; isMyServe = false; }
-
+    if (pointForMe) { myScore++; isMyServe = true; } else { oppScore++; isMyServe = false; }
     return { pointForMe, actionLog };
 }
 
 function checkSetAndMatch(logDiv) {
     let targetScore = (mySets + oppSets === 4) ? 15 : 25; 
     if ((myScore >= targetScore || oppScore >= targetScore) && Math.abs(myScore - oppScore) >= 2) {
+        let setAlert = "";
         if (myScore > oppScore) { 
             mySets++; 
-            logDiv.innerHTML += `<br><span style="color: #f1c40f;">*** WYGRYWAMY SETA! (${myScore}:${oppScore}) ***</span><br><br>`; 
+            setAlert = `<span style="color: #f1c40f; font-weight:bold;">*** SET DLA NAS! (${myScore}:${oppScore}) ***</span><br>`; 
         } else { 
             oppSets++; 
-            logDiv.innerHTML += `<br><span style="color: #e74c3c;">*** SET DLA PRZECIWNIKA (${myScore}:${oppScore}) ***</span><br><br>`; 
+            setAlert = `<span style="color: #e74c3c; font-weight:bold;">*** SET DLA RYWALI (${myScore}:${oppScore}) ***</span><br>`; 
         }
+        
+        logDiv.innerHTML = setAlert + logDiv.innerHTML;
 
         myScore = 0; oppScore = 0;
         document.getElementById("sets-my").innerText = mySets;
@@ -1742,7 +1807,7 @@ function checkSetAndMatch(logDiv) {
             renderStatsTable();
             document.getElementById("time-controls").style.display = "none";
             document.getElementById("btn-return-hub").style.display = "block";
-            logDiv.innerHTML += `<strong style="font-size: 1.2em; color: ${mySets===3 ? '#2ecc71' : '#e74c3c'};">KONIEC MECZU! Wynik: ${mySets}:${oppSets}</strong><br>`;
+            logDiv.innerHTML = `<strong style="font-size: 1.2em; color: ${mySets===3 ? '#2ecc71' : '#e74c3c'};">KONIEC MECZU! Wynik: ${mySets}:${oppSets}</strong><br>` + logDiv.innerHTML;
             return true; 
         }
     }
@@ -1755,31 +1820,35 @@ function startMatchLoop() {
 
     matchInterval = setInterval(() => {
         if (matchFinished) { clearInterval(matchInterval); return; }
+        
         let result = playSinglePoint();
         let color = result.pointForMe ? "#2ecc71" : "#e74c3c";
-        logDiv.innerHTML += `<span style="color: ${color};">[${myScore}:${oppScore}] ${result.actionLog}</span><br>`;
+        
+        let newEntry = `<span style="color: ${color};">[${myScore}:${oppScore}] ${result.actionLog}</span><br>`;
+        logDiv.innerHTML = newEntry + logDiv.innerHTML;
+        
+        let lines = logDiv.innerHTML.split('<br>');
+        if (lines.length > 25) { logDiv.innerHTML = lines.slice(0, 25).join('<br>'); }
+        
         document.getElementById("score-my").innerText = myScore;
         document.getElementById("score-opp").innerText = oppScore;
-        logDiv.scrollTop = logDiv.scrollHeight;
+        
+        renderStatsTable();
         checkSetAndMatch(logDiv);
     }, currentSpeed);
 }
 
-function changeSpeed(ms) {
-    if(matchFinished) return;
-    currentSpeed = ms;
-    startMatchLoop();
-}
+function changeSpeed(ms) { if(matchFinished) return; currentSpeed = ms; startMatchLoop(); }
 
 function instantSimulation() {
     if(matchFinished) return;
     if (matchInterval) clearInterval(matchInterval);
     const logDiv = document.getElementById("play-by-play");
-    logDiv.innerHTML += `<strong>-- SZYBKA SYMULACJA DO KOŃCA --</strong><br>`;
+    logDiv.innerHTML = `<strong>-- EXPRESOWA SYMULACJA DO KOŃCA --</strong><br>` + logDiv.innerHTML;
     while (!matchFinished) { playSinglePoint(); checkSetAndMatch(logDiv); }
     document.getElementById("score-my").innerText = myScore;
     document.getElementById("score-opp").innerText = oppScore;
-    logDiv.scrollTop = logDiv.scrollHeight;
+    renderStatsTable();
 }
 
 function renderStatsTable() {
@@ -1787,33 +1856,151 @@ function renderStatsTable() {
     tbody.innerHTML = "";
     for (let playerName in matchStats) {
         let s = matchStats[playerName];
-        let przExcPct = s.przTot > 0 ? Math.round((s.przExc / s.przTot) * 100) + "%" : "-";
+        
+        let przPozPct = s.przTot > 0 ? Math.round((s.przPoz / s.przTot) * 100 * 0.65) + "%" : "-";
+        let przExcPct = s.przTot > 0 ? Math.round((s.przExc / s.przTot) * 100 * 0.4) + "%" : "-";
+        
+        // Prawdziwa matematyka ataku i efektywności
         let atkExcPct = s.atkTot > 0 ? Math.round((s.atkPkt / s.atkTot) * 100) + "%" : "-";
+        let atkEffPct = s.atkTot > 0 ? Math.round(((s.atkPkt - s.atkErr - s.atkBlk) / s.atkTot) * 100) + "%" : "-";
+        
         let wlColor = s.wl > 0 ? "#2ecc71" : (s.wl < 0 ? "#e74c3c" : "#ecf0f1");
 
-        tbody.innerHTML += `<tr style="border-top: 1px solid #34495e;">
-            <td style="padding: 8px; text-align: left; font-weight: bold;">${s.name}</td>
-            <td style="padding: 8px; border-left: 1px solid #34495e;"><strong>${s.ptsTot}</strong> | ${s.ptsBP} | <span style="color: ${wlColor}; font-weight: bold;">${s.wl > 0 ? '+'+s.wl : s.wl}</span></td>
-            <td style="padding: 8px; border-left: 1px solid #34495e;">${s.srvTot} | ${s.srvErr} | <strong>${s.srvAce}</strong></td>
-            <td style="padding: 8px; border-left: 1px solid #34495e;">${s.przTot} | ${s.przErr} | ${przExcPct}</td>
-            <td style="padding: 8px; border-left: 1px solid #34495e;">${s.atkTot} | ${s.atkErr} | ${s.atkBlk} | <strong>${s.atkPkt}</strong> | ${atkExcPct}</td>
-            <td style="padding: 8px; border-left: 1px solid #34495e;"><strong>${s.blkPkt}</strong></td>
+        tbody.innerHTML += `<tr>
+            <td style="text-align: left; font-weight: bold; font-size:0.95em;">${s.name}</td>
+            <td><strong style="color:white;">${s.ptsTot}</strong> | <span style="color:#bdc3c7;">${s.ptsBP}</span> | <span style="color: ${wlColor}; font-weight: bold;">${s.wl > 0 ? '+'+s.wl : s.wl}</span></td>
+            <td><span style="color:#bdc3c7;">${s.srvTot} | ${s.srvErr}</span> | <strong style="color:#f1c40f;">${s.srvAce}</strong></td>
+            <td><span style="color:#bdc3c7;">${s.przTot} | ${s.przErr}</span> | <strong style="color:#3498db;">${przPozPct}</strong> | <strong style="color:#2ecc71;">${przExcPct}</strong></td>
+            <td><span style="color:#bdc3c7;">${s.atkTot} | ${s.atkErr} | ${s.atkBlk}</span> | <strong style="color:#2ecc71;">${s.atkPkt}</strong> | ${atkExcPct} | <strong>${atkEffPct}</strong></td>
+            <td><strong style="color:#e67e22;">${s.blkPkt}</strong></td>
         </tr>`;
     }
 }
 
 // ==========================================
-// DRABINKA PLAY-OFF (1-8)
+// SUMARYCZNE STATYSTYKI SEZONU (ZAPIS)
+// ==========================================
+function updateSeasonStats() {
+    for (let p in matchStats) {
+        if (!seasonStats[p]) {
+            seasonStats[p] = JSON.parse(JSON.stringify(matchStats[p]));
+        } else {
+            seasonStats[p].ptsTot += matchStats[p].ptsTot;
+            seasonStats[p].ptsBP += matchStats[p].ptsBP;
+            seasonStats[p].wl += matchStats[p].wl;
+            seasonStats[p].srvTot += matchStats[p].srvTot;
+            seasonStats[p].srvErr += matchStats[p].srvErr;
+            seasonStats[p].srvAce += matchStats[p].srvAce;
+            seasonStats[p].przTot += matchStats[p].przTot;
+            seasonStats[p].przErr += matchStats[p].przErr;
+            seasonStats[p].przPoz += matchStats[p].przPoz;
+            seasonStats[p].przExc += matchStats[p].przExc;
+            seasonStats[p].atkTot += matchStats[p].atkTot;
+            seasonStats[p].atkErr += matchStats[p].atkErr;
+            seasonStats[p].atkBlk += matchStats[p].atkBlk;
+            seasonStats[p].atkPkt += matchStats[p].atkPkt;
+            seasonStats[p].blkPkt += matchStats[p].blkPkt;
+        }
+    }
+}
+
+function showSeasonSummary(champion) {
+    document.getElementById("season-hub-modal").style.display = "none";
+    document.getElementById("result-modal").style.display = "none";
+    document.getElementById("season-summary-modal").style.display = "flex";
+
+    let grade = "C";
+    let color = "#e74c3c";
+    let desc = "Rozczarowujący sezon. Szybkie odpadnięcie z Play-Off. Warto przemyśleć strategię draftu.";
+
+    if (champion === teamName) {
+        grade = "S+"; color = "#f1c40f"; desc = "ABSOLUTNA DOMINACJA! Zbudowałeś drużynę marzeń i wznosisz Puchar!";
+    } else if (season.playerExitStage === "RUNDA FINAŁOWA") {
+        grade = "A"; color = "#2ecc71"; desc = "Znakomity sezon. Dotarłeś do samego finału, zabrakło tylko kropki nad 'i'.";
+    } else if (season.playerExitStage === "PÓŁFINAŁY") {
+        grade = "B"; color = "#3498db"; desc = "Solidny wynik. Półfinał to dobra baza, ale w przyszłym roku musisz wzmocnić słabe punkty.";
+    }
+
+    document.getElementById("manager-grade").innerText = grade;
+    document.getElementById("manager-grade").style.color = color;
+    document.getElementById("manager-desc").innerText = desc;
+
+    const tbody = document.getElementById("season-stats-body");
+    tbody.innerHTML = "";
+
+    let sortedPlayers = Object.values(seasonStats).sort((a,b) => b.ptsTot - a.ptsTot);
+
+    sortedPlayers.forEach(s => {
+        let przPozPct = s.przTot > 0 ? Math.round((s.przPoz / s.przTot) * 100 * 0.65) + "%" : "-";
+        let przExcPct = s.przTot > 0 ? Math.round((s.przExc / s.przTot) * 100 * 0.4) + "%" : "-";
+        
+        let atkExcPct = s.atkTot > 0 ? Math.round((s.atkPkt / s.atkTot) * 100) + "%" : "-";
+        let atkEffPct = s.atkTot > 0 ? Math.round(((s.atkPkt - s.atkErr - s.atkBlk) / s.atkTot) * 100) + "%" : "-";
+        
+        tbody.innerHTML += `<tr>
+            <td style="text-align: left; font-weight: bold; font-size:1.05em;">${s.name} <br><span style="font-size:0.7em; font-weight:normal; color:#bdc3c7;">${s.pos}</span></td>
+            <td><strong style="color:white; font-size:1.2em;">${s.ptsTot}</strong></td>
+            <td><strong style="color:#f1c40f;">${s.srvAce}</strong> | <span style="color:#e74c3c;">${s.srvErr}</span></td>
+            <td><span style="color:#bdc3c7;">${s.przTot} | ${s.przErr}</span> | <strong style="color:#3498db;">${przPozPct}</strong> | <strong style="color:#2ecc71;">${przExcPct}</strong></td>
+            <td><strong style="color:#2ecc71;">${s.atkPkt}</strong> | ${atkExcPct} | <strong>${atkEffPct}</strong></td>
+            <td><strong style="color:#e67e22; font-size:1.2em;">${s.blkPkt}</strong></td>
+        </tr>`;
+    });
+}
+
+// ==========================================
+// DRABINKA PLAY-OFF I POWROTY
 // ==========================================
 function returnToSeasonHub() {
+    updateSeasonStats(); 
     document.getElementById("result-modal").style.display = "none";
+    
     if(!season.isPlayoffs) {
         updateStandings(teamName, season.myCurrentOpponent.teamName, mySets, oppSets);
         season.currentRound++;
-        if (season.currentRound >= 7) setupPlayoffs(); else showSeasonHub();
+        
+        if (season.currentRound === 7 && !season.regularSeasonFinished) {
+            season.regularSeasonFinished = true;
+            showSeasonHub(); 
+        } else if (season.currentRound > 7 || (season.currentRound === 7 && season.regularSeasonFinished)) {
+            setupPlayoffs();
+        } else {
+            showSeasonHub();
+        }
     } else {
         processPlayoffResult();
     }
+}
+
+function drawBracketMatch(m) {
+    let isMyMatch = (m.t1 === teamName || m.t2 === teamName);
+    let activeStage = season.playoffMatchups.some(p => p.id === m.id);
+    
+    let borderCol = isMyMatch ? "#2ecc71" : "#34495e";
+    let bgCol = isMyMatch ? "#143020" : "#1e272e";
+    
+    if (activeStage && !m.finished) { borderCol = "#f1c40f"; if(isMyMatch) bgCol = "#3d320b"; }
+    
+    let t1W = m.wins1 === 2;
+    let t2W = m.wins2 === 2;
+    let opacity = (m.t1 === "TBD" && !m.finished) ? '0.4' : '1';
+    
+    let label = "";
+    if(m.isFinal) label = `<div style="font-size:0.7em; color:#f1c40f; margin-bottom:5px; font-weight:bold;">WIELKI FINAŁ</div>`;
+    if(m.isThirdPlace) label = `<div style="font-size:0.7em; color:#e67e22; margin-bottom:5px; font-weight:bold;">O 3 MIEJSCE</div>`;
+
+    return `
+    <div class="bracket-match ${isMyMatch ? 'my-match' : ''}" style="border-color: ${borderCol}; background-color: ${bgCol}; opacity: ${opacity};">
+        ${label}
+        <div class="bracket-team ${t1W ? 'winner' : ''}">
+            <span>${m.t1.substring(0, 20)}${m.t1.length>20?'...':''}</span>
+            <span class="bracket-score">${m.wins1}</span>
+        </div>
+        <div class="bracket-team ${t2W ? 'winner' : ''}">
+            <span>${m.t2.substring(0, 20)}${m.t2.length>20?'...':''}</span>
+            <span class="bracket-score">${m.wins2}</span>
+        </div>
+    </div>`;
 }
 
 function setupPlayoffs() {
@@ -1828,59 +2015,64 @@ function setupPlayoffs() {
         return bRatio - aRatio;
     });
 
-    let top8 = st.map(t => t.name); 
+    let top8 = st.map(t => t.name);
 
-    season.playoffMatchups = [
-        { id: "QF1", t1: top8[0], t2: top8[7], wins1: 0, wins2: 0, finished: false, winner: null },
-        { id: "QF2", t1: top8[3], t2: top8[4], wins1: 0, wins2: 0, finished: false, winner: null },
-        { id: "QF3", t1: top8[1], t2: top8[6], wins1: 0, wins2: 0, finished: false, winner: null },
-        { id: "QF4", t1: top8[2], t2: top8[5], wins1: 0, wins2: 0, finished: false, winner: null }
-    ];
-
+    season.bracket = {
+        qf: [
+            { id: "QF1", t1: top8[0], t2: top8[7], wins1: 0, wins2: 0, finished: false, winner: "TBD", loser: "TBD" },
+            { id: "QF2", t1: top8[3], t2: top8[4], wins1: 0, wins2: 0, finished: false, winner: "TBD", loser: "TBD" },
+            { id: "QF3", t1: top8[1], t2: top8[6], wins1: 0, wins2: 0, finished: false, winner: "TBD", loser: "TBD" },
+            { id: "QF4", t1: top8[2], t2: top8[5], wins1: 0, wins2: 0, finished: false, winner: "TBD", loser: "TBD" }
+        ],
+        sf: [
+            { id: "SF1", t1: "TBD", t2: "TBD", wins1: 0, wins2: 0, finished: false, winner: "TBD", loser: "TBD" },
+            { id: "SF2", t1: "TBD", t2: "TBD", wins1: 0, wins2: 0, finished: false, winner: "TBD", loser: "TBD" }
+        ],
+        finals: [
+            { id: "3P", t1: "TBD", t2: "TBD", wins1: 0, wins2: 0, finished: false, winner: "TBD", loser: "TBD", isThirdPlace: true },
+            { id: "F", t1: "TBD", t2: "TBD", wins1: 0, wins2: 0, finished: false, winner: "TBD", loser: "TBD", isFinal: true }
+        ]
+    };
+    
+    season.playoffMatchups = season.bracket.qf;
     showSeasonHub();
 }
 
-// Zastąp te dwie funkcje na samym dole pliku script.js
-
 function renderPlayoffHub() {
-    document.querySelector(".standings-table").style.display = "none";
+    document.getElementById("table-container").style.display = "none";
     const infoDiv = document.getElementById("playoff-info");
     infoDiv.style.display = "block";
+    infoDiv.style.maxWidth = "100%";
     
-    let html = `<h3>FAZA PUCHAROWA: ${season.playoffStage} (DO 2 ZWYCIĘSTW)</h3>`;
-    
-    season.playoffMatchups.forEach(m => {
-        let isMyMatch = m.t1 === teamName || m.t2 === teamName;
-        let pLabel = m.isFinal ? "WIELKI FINAŁ" : (m.isThirdPlace ? "MECZ O 3. MIEJSCE" : "");
-        html += `<div style="background: rgba(0,0,0,0.4); padding: 12px; margin: 10px; border-radius: 6px; ${isMyMatch ? 'border: 2px solid #2ecc71; background-color: #1e3725;' : 'border: 1px solid #7f8c8d;'}">
-            ${pLabel ? `<span style="color:#f1c40f; display:block; margin-bottom:5px;"><strong>${pLabel}</strong></span>` : ''}
-            ${m.t1} <strong style="color: #f1c40f; font-size: 1.2em;">[${m.wins1} - ${m.wins2}]</strong> ${m.t2}
-            ${m.finished ? ` <span style="color:#2ecc71; font-weight:bold;">(Awans: ${m.winner})</span>` : ''}
-        </div>`;
-    });
-
-    // Zakończenie gry
-    if (season.champion) {
-        html += `<div style="margin-top: 30px; font-size: 1.8em; color: #f1c40f; border-top: 2px dashed #f1c40f; padding-top: 20px;">🏆 MISTRZ POLSKI: ${season.champion} 🏆</div>`;
-    }
+    let html = `
+    <h3 style="font-size: 1.6em; color: #f1c40f; margin-bottom: 20px; text-transform: uppercase;">DRABINKA: ${season.playoffStage}</h3>
+    <div class="bracket-wrapper">
+        <div class="bracket">
+            <div class="bracket-col">
+                <h4>Ćwierćfinały</h4>
+                ${season.bracket.qf.map(m => drawBracketMatch(m)).join('')}
+            </div>
+            <div class="bracket-col">
+                <h4>Półfinały</h4>
+                ${season.bracket.sf.map(m => drawBracketMatch(m)).join('')}
+            </div>
+            <div class="bracket-col">
+                <h4 style="color:#f1c40f;">Finały</h4>
+                ${season.bracket.finals.map(m => drawBracketMatch(m)).join('')}
+            </div>
+        </div>
+    </div>`;
 
     infoDiv.innerHTML = html;
     
     const btn = document.getElementById("btn-next-match");
-    
-    if (season.champion) {
-        btn.style.display = "inline-block";
-        btn.style.backgroundColor = "#3498db";
-        btn.innerText = "Rozpocznij Nową Karierę 🔄";
-        btn.onclick = () => location.reload();
-        return;
-    }
+    if (season.champion) { btn.style.display = "none"; return; }
 
     let myMatch = season.playoffMatchups.find(m => (m.t1 === teamName || m.t2 === teamName) && !m.finished);
     
     if(myMatch) {
         btn.style.display = "inline-block";
-        btn.innerText = "Rozegraj Swój Mecz Play-Off 🏆";
+        btn.innerText = "Zagraj Mecz Play-Off 🏆";
         btn.onclick = () => {
             season.playoffMatchups.filter(m => m !== myMatch && !m.finished).forEach(aiMatch => {
                 let aiT1 = season.teams.find(t => t.teamName === aiMatch.t1);
@@ -1900,7 +2092,7 @@ function renderPlayoffHub() {
         let anyUnfinished = season.playoffMatchups.some(m => !m.finished);
         if(anyUnfinished) {
             btn.style.display = "inline-block";
-            btn.innerText = "Przesymuluj Pozostałe Pary AI ⏩";
+            btn.innerText = "Symuluj Resztę Par AI ⏩";
             btn.onclick = () => {
                 season.playoffMatchups.filter(m => !m.finished).forEach(aiMatch => {
                     let aiT1 = season.teams.find(t => t.teamName === aiMatch.t1);
@@ -1914,7 +2106,7 @@ function renderPlayoffHub() {
             };
         } else {
             btn.style.display = "inline-block";
-            btn.innerText = "Przejdź do kolejnej rundy ➔";
+            btn.innerText = "Zatwierdź Wyniki i Przejdź Dalej ➔";
             btn.onclick = () => { processPlayoffResult(); };
         }
     }
@@ -1934,26 +2126,39 @@ function processPlayoffResult() {
             myMatch.finished = true;
             myMatch.winner = myMatch.wins1 === 2 ? myMatch.t1 : myMatch.t2;
             myMatch.loser = myMatch.wins1 === 2 ? myMatch.t2 : myMatch.t1;
+            
+            // ZAPISZ ETAP, W KTÓRYM ODPADŁ GRACZ! (Naprawa błędnej oceny A)
+            if (myMatch.loser === teamName) {
+                season.playerExitStage = season.playoffStage;
+            }
         }
     }
 
     let allFinished = season.playoffMatchups.every(m => m.finished);
+    
     if (allFinished) {
         if (season.playoffStage === "ĆWIERĆFINAŁY") {
             season.playoffStage = "PÓŁFINAŁY";
-            season.playoffMatchups = [
-                { id: "SF1", t1: season.playoffMatchups[0].winner, t2: season.playoffMatchups[1].winner, wins1: 0, wins2: 0, finished: false, winner: null, loser: null },
-                { id: "SF2", t1: season.playoffMatchups[2].winner, t2: season.playoffMatchups[3].winner, wins1: 0, wins2: 0, finished: false, winner: null, loser: null }
-            ];
+            season.bracket.sf[0].t1 = season.bracket.qf[0].winner;
+            season.bracket.sf[0].t2 = season.bracket.qf[1].winner;
+            season.bracket.sf[1].t1 = season.bracket.qf[2].winner;
+            season.bracket.sf[1].t2 = season.bracket.qf[3].winner;
+            season.playoffMatchups = season.bracket.sf;
+            showSeasonHub();
         } else if (season.playoffStage === "PÓŁFINAŁY") {
             season.playoffStage = "RUNDA FINAŁOWA";
-            season.playoffMatchups = [
-                { id: "3P", t1: season.playoffMatchups[0].loser, t2: season.playoffMatchups[1].loser, wins1: 0, wins2: 0, finished: false, winner: null, loser: null, isThirdPlace: true },
-                { id: "F", t1: season.playoffMatchups[0].winner, t2: season.playoffMatchups[1].winner, wins1: 0, wins2: 0, finished: false, winner: null, loser: null, isFinal: true }
-            ];
+            season.bracket.finals[0].t1 = season.bracket.sf[0].loser; 
+            season.bracket.finals[0].t2 = season.bracket.sf[1].loser;
+            season.bracket.finals[1].t1 = season.bracket.sf[0].winner; 
+            season.bracket.finals[1].t2 = season.bracket.sf[1].winner;
+            season.playoffMatchups = season.bracket.finals;
+            showSeasonHub();
         } else if (season.playoffStage === "RUNDA FINAŁOWA") {
-            season.champion = season.playoffMatchups.find(m => m.isFinal).winner;
+            season.champion = season.bracket.finals[1].winner;
+            renderPlayoffHub(); 
+            setTimeout(() => { showSeasonSummary(season.champion); }, 1500); 
         }
+    } else {
+        showSeasonHub();
     }
-    showSeasonHub();
 }
