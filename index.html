@@ -6,120 +6,226 @@
     <title>Volley Draft Pro - Tryb Sezonu</title>
     <style>
         * { box-sizing: border-box; }
-        :root { --primary-bg: #1a1a2e; --court-color: #e67e22; --court-lines: #f1c40f; --text-light: #ecf0f1; --card-bg: #2c3e50; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--primary-bg); color: var(--text-light); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
-        h1, h2, h3 { margin-top: 0; margin-bottom: 5px; }
         
+        /* PALETA BARW DARK GLASSMORPHISM */
+        :root { 
+            --primary-bg: #0b0b16; 
+            --gradient-bg: linear-gradient(135deg, #0f0f1e 0%, #1a1a3a 100%);
+            --court-color: #d35400; 
+            --court-lines: #f1c40f; 
+            --text-light: #f5f6fa; 
+            /* Efekt Szkła */
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-bg-hover: rgba(255, 255, 255, 0.09);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            /* Tierty Kart */
+            --tier-gold: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+            --tier-silver: linear-gradient(135deg, #dcdde1 0%, #718093 100%);
+            --tier-bronze: linear-gradient(135deg, #cd7f32 0%, #8c521f 100%);
+        }
+
+        body { 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background: var(--primary-bg);
+            background-image: var(--gradient-bg);
+            background-attachment: fixed;
+            color: var(--text-light); 
+            margin: 0; 
+            padding: 15px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4 { margin-top: 0; margin-bottom: 5px; font-weight: 600; letter-spacing: 0.5px; }
+        
+        /* GÓRNY PASEK: WYBÓR LIGI I JĘZYKA */
+        .top-navbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            width: 100%; 
+            max-width: 1300px; 
+            margin-bottom: 15px; 
+            padding: 5px 10px;
+        }
+        .league-selector select {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-light);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+        .lang-switcher { display: flex; gap: 8px; }
+        .lang-btn { 
+            background: var(--glass-bg); border: 1px solid var(--glass-border); 
+            color: var(--text-light); padding: 5px 10px; border-radius: 6px; 
+            cursor: pointer; font-size: 0.85em; font-weight: bold; transition: 0.2s;
+        }
+        .lang-btn.active { background: #3498db; border-color: #2980b9; }
+
+        /* NOWOCZESNE PANELE SZKLANE (GLASSMORPHISM) */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            box-shadow: var(--glass-shadow);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
         .top-section { display: flex; gap: 15px; width: 100%; max-width: 1300px; margin-bottom: 15px; align-items: stretch; }
-        .trainer-panel { background-color: var(--card-bg); padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); min-width: 200px; }
-        .draft-panel { background-color: var(--card-bg); padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); flex-grow: 1; text-align: center; }
-        .stats-panel { background-color: var(--card-bg); padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); min-width: 200px; font-size: 0.9em; }
-        .stat-line { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; }
+        .trainer-panel { min-width: 220px; }
+        .draft-panel { flex-grow: 1; text-align: center; }
+        .stats-panel { min-width: 220px; font-size: 0.9em; }
+        .stat-line { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
         
-        #available-players { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 15px 0; }
-        .player-btn { background-color: #3498db; color: white; border: 1px solid #2980b9; padding: 10px 14px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; transition: 0.2s; line-height: 1.3; }
-        .player-btn:hover:not(:disabled) { background-color: #2980b9; transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.4); }
-        .player-btn:disabled { background-color: #7f8c8d; border-color: #95a5a6; opacity: 0.4; cursor: not-allowed; }
+        /* UNOWOCZEŚNIONE KARTY ZAWODNIKÓW */
+        #available-players { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 15px 0; }
+        .player-card { 
+            background: rgba(20, 20, 35, 0.6);
+            border: 2px solid var(--glass-border);
+            border-radius: 12px;
+            width: 130px;
+            padding: 10px;
+            cursor: pointer;
+            transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        .player-card:hover:not(.disabled) { 
+            transform: translateY(-6px);
+            box-shadow: 0 8px 25px rgba(255,255,255,0.1);
+        }
+        .player-card.disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
         
-        .btn-action { background-color: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1em; margin-top: 10px; }
+        /* KOLOROWE ELEMENTY TIEROWANIA KART */
+        .card-gold { border-color: #ffd700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+        .card-silver { border-color: #bdc3c7; box-shadow: 0 0 10px rgba(189, 195, 199, 0.2); }
+        .card-bronze { border-color: #cd7f32; box-shadow: 0 0 10px rgba(205, 127, 50, 0.2); }
 
-        .court-container { background-color: #e0e0e0; padding: 15px; border-radius: 10px; width: 100%; max-width: 1300px; }
-        .volleyball-court { background-color: var(--court-color); border: 5px solid var(--text-light); height: 350px; position: relative; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 10px; padding: 15px; }
-        .attack-line { position: absolute; top: 50%; left: 0; width: 100%; border-top: 5px dashed var(--text-light); z-index: 1; }
-        .player-slot { background-color: rgba(255, 255, 255, 0.2); border: 2px solid var(--text-light); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; text-align: center; padding: 5px; font-size: 0.9em; font-weight: bold; color: #1a1a2e; text-shadow: 1px 1px 2px rgba(255,255,255,0.5); }
-        .player-slot.libero-slot { grid-column: 2 / 3; background-color: rgba(46, 204, 113, 0.3); }
+        .player-card .ovr-badge {
+            font-size: 1.4em;
+            font-weight: 900;
+            margin-top: 5px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(0,0,0,0.3);
+        }
+        .badge-gold { background: var(--tier-gold); color: #000; }
+        .badge-silver { background: var(--tier-silver); color: #000; }
+        .badge-bronze { background: var(--tier-bronze); color: #fff; }
 
-        #coach-modal, #season-hub-modal, #season-summary-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200; display: flex; justify-content: center; align-items: center; flex-direction: column; overflow-y: auto; padding: 20px 0; }
-        .coach-card { background-color: var(--card-bg); border: 3px solid #3498db; padding: 15px; width: 220px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; color: white; margin-bottom: 10px; }
-        .coach-card:hover { transform: scale(1.05); border-color: #f1c40f; }
-        #team-name-input { padding: 10px; font-size: 1.2em; border-radius: 5px; border: none; margin-bottom: 20px; text-align: center; width: 300px; max-width: 90%; font-weight: bold; }
+        .player-card .player-name { font-size: 0.9em; font-weight: bold; text-align: center; margin-top: 5px; height: 34px; overflow: hidden; }
+        .player-card .player-pos { font-size: 0.75em; opacity: 0.6; text-transform: uppercase; margin-top: 2px; }
 
-        .table-responsive { width: 95%; max-width: 1400px; overflow-x: auto; margin-bottom: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); border-radius: 10px; }
-        .standings-table { width: 100%; border-collapse: collapse; background: var(--card-bg); font-size: 1.3em; min-width: 800px; }
-        .standings-table th, .standings-table td { padding: 15px; text-align: center; border: 1px solid #7f8c8d; }
-        .standings-table th { background-color: #34495e; color: #f1c40f; font-size: 1.1em; }
-        .my-team-row { background-color: #27ae60 !important; color: white; font-weight: bold; font-size: 1.05em; }
+        .btn-action { background-color: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1em; margin-top: 10px; transition: 0.2s; }
+        .btn-action:hover { background-color: #c0392b; }
+
+        /* PARKIET I BOISKO */
+        .court-container { background: rgba(255,255,255,0.02); padding: 15px; border-radius: 14px; width: 100%; max-width: 1300px; border: 1px solid var(--glass-border); }
+        .volleyball-court { background-color: var(--court-color); border: 5px solid var(--text-light); height: 350px; position: relative; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 10px; padding: 15px; border-radius: 4px; }
+        .attack-line { position: absolute; top: 50%; left: 0; width: 100%; border-top: 5px dashed var(--text-light); z-index: 1; opacity: 0.7; }
+        .player-slot { background-color: rgba(255, 255, 255, 0.12); border: 2px solid var(--text-light); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; text-align: center; padding: 5px; font-size: 0.9em; font-weight: bold; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); backdrop-filter: blur(4px); }
+        .player-slot.libero-slot { grid-column: 2 / 3; background-color: rgba(46, 204, 113, 0.25); }
+
+        /* BOKS INSTRUKCJI STARTOWEJ */
+        .instruction-box {
+            background: rgba(52, 152, 219, 0.1);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            font-size: 0.88em;
+            line-height: 1.4;
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* MODALE I INTERFEJSY SEZONOWE */
+        .coach-selection-grid { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin: 15px 0; }
+        .coach-card { background: rgba(255,255,255,0.05); border: 2px solid #3498db; padding: 15px; width: 220px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; color: white; }
+        .coach-card:hover { transform: scale(1.04); border-color: #f1c40f; background: rgba(255,255,255,0.1); }
         
-        .bracket-wrapper { width: 100%; overflow-x: auto; padding: 10px 0; margin-bottom: 20px; }
-        .bracket { display: flex; min-width: 850px; justify-content: space-between; gap: 20px; }
+        .table-responsive { width: 95%; max-width: 1400px; overflow-x: auto; margin-bottom: 30px; border-radius: 10px; border: 1px solid var(--glass-border); }
+        .standings-table { width: 100%; border-collapse: collapse; background: #131325; font-size: 1.2em; min-width: 800px; }
+        .standings-table th, .standings-table td { padding: 15px; text-align: center; border-bottom: 1px solid var(--glass-border); }
+        .standings-table th { background-color: #1c1c3a; color: #f1c40f; }
+        .my-team-row { background-color: #1e3d26 !important; color: white; font-weight: bold; }
+        
+        /* BRACKET WRAPPER DLA DUŻEJ DRABINKI */
+        .bracket-wrapper { width: 100%; overflow-x: auto; padding: 15px 0; margin-bottom: 20px; }
+        .bracket { display: flex; min-width: 900px; justify-content: space-between; gap: 30px; padding: 10px; }
         .bracket-col { display: flex; flex-direction: column; justify-content: space-around; flex: 1; }
-        .bracket-col h4 { text-align: center; margin-bottom: 15px; font-size: 1.2em; text-transform: uppercase; letter-spacing: 1px; color: #f1c40f;}
-        .bracket-match { background: #1e272e; border: 2px solid #34495e; border-radius: 8px; padding: 10px; margin: 10px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: 0.3s; }
-        .bracket-match.my-match { border-color: #2ecc71; background: #143020; box-shadow: 0 0 15px rgba(46, 204, 113, 0.4); }
-        .bracket-match.active-match { border-color: #f1c40f; box-shadow: 0 0 15px rgba(241, 196, 15, 0.4); }
-        .bracket-team { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 0.95em; color: #ecf0f1; }
+        .bracket-col h4 { text-align: center; margin-bottom: 15px; font-size: 1.2em; text-transform: uppercase; color: #f1c40f; }
+        .bracket-match { background: #16162d; border: 2px solid #2c2c54; border-radius: 8px; padding: 10px; margin: 10px 0; box-shadow: var(--glass-shadow); }
+        .bracket-match.my-match { border-color: #2ecc71; background: #0f2b19; }
+        .bracket-team { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 0.95em; }
         .bracket-team.winner { font-weight: bold; color: #f1c40f; }
-        .bracket-team:first-child { border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .bracket-score { font-weight: bold; background: rgba(0,0,0,0.4); padding: 3px 10px; border-radius: 4px; font-size: 1.1em; }
+        .bracket-team:first-child { border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .bracket-score { font-weight: bold; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; }
+
+        /* SZEW MECZOWY / RAPORT LIVE */
+        .modal-inner { background: #111122; border: 1px solid var(--glass-border); padding: 30px; border-radius: 15px; width: 98%; max-width: 1500px; margin: auto; box-shadow: var(--glass-shadow); }
+        .result-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 15px; }
+        .result-header > div { width: 33%; text-align: center; }
+
+        #play-by-play { background: #07070f; color: #2ecc71; font-family: monospace; height: 140px; max-height: 140px; overflow-y: auto; text-align: left; padding: 15px; margin-bottom: 20px; font-size: 1.1em; border-radius: 8px; border: 1px solid #22223b; line-height: 1.4; }
         
-        #result-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 300; overflow-y: auto; padding: 20px 0; }
-        .modal-inner { background: var(--card-bg); padding: 30px; border-radius: 15px; width: 98%; max-width: 1500px; margin: auto; border: 2px solid var(--court-lines); box-shadow: 0 0 30px rgba(241, 196, 15, 0.3); }
-        .result-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #7f8c8d; padding-bottom: 15px; margin-bottom: 15px; }
-        .result-header > div { width: 30%; text-align: center; }
-
-        #play-by-play { background: #0d1117; color: #2ecc71; font-family: monospace; height: 140px; max-height: 140px; overflow-y: auto; text-align: left; padding: 15px; margin-bottom: 20px; font-size: 1.2em; border-radius: 8px; border: 2px solid #34495e; line-height: 1.4; }
-        .stats-table-live { width: 100%; text-align: center; border-collapse: separate; border-spacing: 0; font-size: 1.1em; background: rgba(26,26,46,0.8); min-width: 700px; }
-        .stats-table-live th { background: #34495e; color: #f1c40f; padding: 12px; font-weight: bold; border-bottom: 3px solid #7f8c8d; font-size: 1.1em; }
-        .stats-table-live td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .stats-table-live tr:nth-child(even) { background: rgba(255,255,255,0.03); } 
+        .stats-table-live { width: 100%; text-align: center; border-collapse: separate; border-spacing: 0; font-size: 1.1em; background: #131325; min-width: 750px; }
+        .stats-table-live th { background: #1c1c3a; color: #f1c40f; padding: 12px; font-weight: bold; border-bottom: 2px solid var(--glass-border); }
+        .stats-table-live td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .stats-table-live tr:nth-child(even) { background: rgba(255,255,255,0.01); } 
         
-        /* ZAMROŻONA PIERWSZA KOLUMNA Z NAZWISKAMI */
-        .stats-table-live th:first-child,
-        .stats-table-live td:first-child {
-            position: sticky;
-            left: 0;
-            z-index: 2;
-            box-shadow: 3px 0 6px rgba(0,0,0,0.6); /* Elegancki cień oddzielający kolumnę */
-            text-align: left; /* Wyrównanie nazwisk do lewej dla lepszej czytelności */
-        }
-        .stats-table-live th:first-child {
-            background-color: #34495e;
-            z-index: 3; /* Nagłówek musi być najwyżej */
-        }
-        .stats-table-live td:first-child {
-            background-color: #171c2e; /* Solidne tło zakrywające przesuwający się tekst */
-        }
-        .stats-table-live tr:nth-child(even) td:first-child {
-            background-color: #1c2238; /* Minimalnie jaśniejsze tło do efektu zebry */
-        }
+        /* ZAMROŻONA KOLUMNA */
+        .stats-table-live th:first-child, .stats-table-live td:first-child { position: sticky; left: 0; z-index: 2; box-shadow: 3px 0 6px rgba(0,0,0,0.5); text-align: left; }
+        .stats-table-live th:first-child { background-color: #1c1c3a; z-index: 3; }
+        .stats-table-live td:first-child { background-color: #131325; }
+        .stats-table-live tr:nth-child(even) td:first-child { background-color: #17172c; }
 
-        .summary-box { background: #1a1a2e; padding: 20px; border-radius: 10px; border: 2px dashed #f1c40f; margin-bottom: 20px; text-align: center;}
+        /* TACTICAL TIME-OUT BUTTON */
+        .btn-timeout { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1em; margin-left: 10px; transition: 0.2s; }
+        .btn-timeout:disabled { background: #576574; opacity: 0.4; cursor: not-allowed; }
 
+        /* INTERFEJS DOTYKOWY I STICKY DLA SMARTFONÓW */
         @media (max-width: 768px) {
-            body { padding: 2px; }
+            body { padding: 4px; }
             h1 { font-size: 1.3em !important; text-align: center; margin: 4px 0; }
-            .top-section { flex-direction: column; gap: 4px; margin-bottom: 4px; }
-            .trainer-panel, .draft-panel, .stats-panel { width: 100%; padding: 6px; border-radius: 6px; }
+            .top-navbar { margin-bottom: 5px; }
+            .top-section { flex-direction: column; gap: 5px; margin-bottom: 5px; }
+            .trainer-panel, .draft-panel, .stats-panel { width: 100%; padding: 10px; border-radius: 10px; }
             .trainer-panel h2, .stats-panel h2 { display: none; } 
             #team-display-name { font-size: 1.2em; margin-bottom: 2px; }
             .draft-panel h3 { font-size: 0.9em; margin-bottom: 4px; }
             .stats-container-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
-            .stat-line { flex-direction: column; text-align: center; margin-bottom: 0; border: none; padding: 2px; background: rgba(0,0,0,0.2); border-radius: 4px; font-size: 0.8em; }
-            .stat-line span:last-child { font-size: 1.2em; }
-            #available-players { gap: 4px; margin: 6px 0; }
-            .player-btn { padding: 4px 6px; font-size: 10px; border-radius: 4px; }
-            .player-btn div { font-size: 1.1em !important; padding: 1px 4px !important; margin-top: 2px !important; }
-            .court-container { padding: 5px; border-radius: 6px; margin-bottom: 50px; }
-            .court-container h2 { font-size: 0.9em; margin-bottom: 2px; }
+            .stat-line { flex-direction: column; text-align: center; margin-bottom: 0; border: none; padding: 2px; background: rgba(0,0,0,0.2); border-radius: 4px; font-size: 0.75em; }
+            .stat-line span:last-child { font-size: 1.1em; }
+            
+            .court-container { padding: 5px; border-radius: 8px; margin-bottom: 60px; }
             .volleyball-court { height: 180px; padding: 2px; gap: 2px; border-width: 2px; }
-            .player-slot { padding: 1px; font-size: 0.65em; border-width: 1px; border-radius: 4px; line-height: 1.1; }
-            #slot-Środkowy2 { width: 100px !important; font-size: 0.65em !important; padding: 2px; margin-top: 4px; }
+            .player-slot { padding: 1px; font-size: 0.65em; border-width: 1px; border-radius: 4px; }
+            #slot-Środkowy2 { width: 100px !important; font-size: 0.65em !important; margin-top: 4px; }
             
-            /* NAPRAWA WIDOKU MODALI NA TELEFON (Flex-start zapobiega obcinaniu góry) */
-            #coach-modal, #season-hub-modal, #season-summary-modal, #result-modal { 
-                justify-content: flex-start; padding-top: 10px; 
-            }
+            #coach-modal, #season-hub-modal, #season-summary-modal, #result-modal { justify-content: flex-start; padding-top: 10px; }
+            #season-hub-modal h1, #season-summary-modal h1 { font-size: 1.4em !important; }
             
-            #coach-modal h1 { font-size: 1.8em !important; text-align: center;}
-            #season-hub-modal h1, #season-summary-modal h1 { font-size: 1.4em !important; text-align: center; margin-bottom: 0;}
-            #season-round-info { font-size: 1.1em !important; margin-bottom: 5px; margin-top: 5px; }
-            
-            /* KOMPAKTOWA TABELA LIGOWA */
-            .table-responsive { width: 100%; border-radius: 5px; margin-bottom: 10px; }
+            .table-responsive { width: 100%; margin-bottom: 10px; }
             .standings-table { font-size: 0.85em; min-width: 500px; } 
             .standings-table th, .standings-table td { padding: 6px 4px; }
             
-            /* --- MAGIA UX: PRZYKLEJONE PRZYCISKI (STICKY) NA DOLE EKRANU --- */
+            /* STICKY BUTTONS UX */
             #btn-next-match, #btn-start-league-now, #btn-return-hub { 
                 width: 95%; padding: 12px !important; font-size: 1.1em !important; 
                 position: sticky; bottom: 10px; z-index: 500; 
@@ -127,117 +233,139 @@
                 box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
             }
             
-            /* ULTRA-KOMPAKTOWY EKRAN MECZOWY */
-            .modal-inner { padding: 5px 8px; width: 100%; margin: 0 auto; border: none; border-radius: 5px;}
-            .result-header { flex-direction: row; gap: 4px; padding-bottom: 5px; margin-bottom: 5px; border-bottom: 1px solid #7f8c8d;}
-            .result-header > div { width: 33%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: transparent; padding: 2px; }
-            .result-header h2 { font-size: 0.85em !important; margin: 0; text-align: center; line-height: 1.1; }
-            .result-header span { font-size: 1.6em !important; margin: 0; text-align: center; }
-            .result-header > div:nth-child(2) { background: #1a1a2e; border: 1px solid #f1c40f; padding: 4px; border-radius: 6px; }
-            .result-header > div:nth-child(2) h3 { font-size: 0.8em; }
-            .result-header > div:nth-child(2) div { font-size: 1.4em !important; padding: 0 !important; }
+            .modal-inner { padding: 8px; width: 100%; border: none; }
+            .result-header { padding-bottom: 5px; margin-bottom: 5px; }
+            .result-header h2 { font-size: 0.85em !important; }
+            .result-header span { font-size: 1.5em !important; }
             
             #time-controls { flex-wrap: wrap; gap: 4px; margin-bottom: 5px; }
-            #time-controls button { flex-grow: 1; padding: 8px; font-size: 0.9em; width: 30%; }
-            #play-by-play { font-size: 0.8em; height: 75px; max-height: 75px; padding: 5px; margin-bottom: 5px; line-height: 1.1; }
-            
-            /* MNIEJSZA TABELA STATYSTYK NA ŻYWO */
+            #time-controls button { flex-grow: 1; padding: 8px; font-size: 0.85em; }
+            .btn-timeout { padding: 8px 12px; font-size: 0.85em; }
+            #play-by-play { font-size: 0.8em; height: 75px; max-height: 75px; padding: 5px; margin-bottom: 5px; }
             .stats-table-live { font-size: 0.75em; min-width: 450px; }
-            .stats-table-live th { padding: 4px 2px; border-bottom: 1px solid #7f8c8d; }
-            .stats-table-live td { padding: 4px 2px; }
         }
     </style>
 </head>
 <body>
 
+    <div class="top-navbar">
+        <div class="league-selector">
+            <select id="league-db-picker">
+                <option value="TauronLiga">Tauron Liga (K)</option>
+                <option value="PlusLiga">PlusLiga (M)</option>
+            </select>
+        </div>
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="switchLanguage('pl')">PL</button>
+            <button class="lang-btn" onclick="switchLanguage('en')">EN</button>
+            <button class="lang-btn" onclick="switchLanguage('it')">IT</button>
+            <button class="lang-btn" onclick="switchLanguage('es')">ES</button>
+            <button class="lang-btn" onclick="switchLanguage('fr')">FR</button>
+            <button class="lang-btn" onclick="switchLanguage('de')">DE</button>
+            <button class="lang-btn" onclick="switchLanguage('pt')">PT</button>
+        </div>
+    </div>
+
     <div id="coach-modal">
-        <h1 style="color: #f1c40f; font-size: 2.5em; margin-bottom: 10px;">Volley Draft - Tryb Kariery</h1>
+        <h1 style="color: #f1c40f; font-size: 2.3em; margin-bottom: 5px;" id="txt-modal-title">Volley Draft Pro</h1>
+        
+        <div class="instruction-box">
+            <strong id="txt-inst-title">🏐 Szybka instrukcja startowa:</strong><br>
+            1. Wybierz ligę na górnym pasku i wpisz poniżej nazwę klubu.<br>
+            2. Wybierz jednego z trzech wygenerowanych trenerów (zwróć uwagę na ich bonusy taktyczne!).<br>
+            3. Przeprowadź draft! Kompletuj siódemkę meczową dobierając zawodniczki z losowanych paczek klubowych.<br>
+            4. Zarządzaj meczami ligowymi: kontroluj tempo relacji i bierz strategiczne czasy (Time-out) w trudnych momentach setów.<br>
+            <span style="color:#3498db; font-size:0.95em; display:block; margin-top:5px;" id="txt-inst-mail">📩 Chcesz zobaczyć swoją ligę w grze? Napisz: volleydraftpro@gmail.com</span>
+        </div>
+
         <input type="text" id="team-name-input" placeholder="Nazwa drużyny..." value="Dream Team">
-        <div id="coach-options" style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;"></div>
-        <button id="btn-reroll" style="margin-top: 20px; padding: 10px 30px; background-color: #e67e22; border: none; border-radius: 5px; color: white; cursor: pointer; font-size: 1.1em;">Wylosuj Ponownie (1) 🎲</button>
+        <div id="coach-options" class="coach-selection-grid"></div>
+        <button id="btn-reroll" style="margin-top: 10px; padding: 10px 30px; background-color: #e67e22; border: none; border-radius: 8px; color: white; cursor: pointer; font-size: 1em; font-weight: bold;">Wylosuj Ponownie (1) 🎲</button>
     </div>
 
     <div id="season-hub-modal" style="display: none;">
-        <h1 style="color: #f1c40f; font-size: 2.5em; margin-bottom: 10px;" id="season-hub-title">Tabela Ligowa</h1>
-        <h3 id="season-round-info" style="color: #3498db; font-size: 1.5em;">Kolejka: 0/7</h3>
+        <h1 style="color: #f1c40f; font-size: 2.3em; margin-bottom: 5px;" id="season-hub-title">Tabela Ligowa</h1>
+        <h3 id="season-round-info" style="color: #3498db; font-size: 1.3em; margin-bottom: 10px;">Kolejka: 0/7</h3>
         
         <div class="table-responsive" id="table-container">
             <table class="standings-table">
-                <thead><tr><th>#</th><th>Zespół</th><th>PKT</th><th>Z</th><th>P</th><th>Sety W</th><th>Sety P</th></tr></thead>
+                <thead><tr><th>#</th><th id="txt-th-team">Zespół</th><th>PKT</th><th id="txt-th-w">Z</th><th id="txt-th-l">P</th><th id="txt-th-sw">Sety W</th><th id="txt-th-sl">Sety P</th></tr></thead>
                 <tbody id="standings-body"></tbody>
             </table>
         </div>
 
-        <div id="playoff-info" style="display: none; background: var(--card-bg); padding: 20px; border-radius: 10px; width: 95%; max-width: 1400px; text-align: center; margin-bottom: 20px; font-size: 1.1em; border: 2px solid #34495e;"></div>
+        <div id="playoff-info" style="display: none; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; width: 95%; max-width: 1400px; margin-bottom: 25px;"></div>
         
-        <button id="btn-next-match" style="padding: 15px 40px; font-size: 1.3em; background-color: #2ecc71; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(46, 204, 113, 0.4);">Zagraj Mecz 🏐</button>
+        <button id="btn-next-match" style="padding: 15px 40px; font-size: 1.2em; background-color: #2ecc71; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">Zagraj Mecz Kolejki 🏐</button>
     </div>
 
     <div id="season-summary-modal" style="display: none;">
         <div class="modal-inner" style="max-width: 1200px;">
-            <h1 style="color: #f1c40f; font-size: 3em; margin-bottom: 10px; text-align: center;">Koniec Sezonu!</h1>
+            <h1 style="color: #f1c40f; font-size: 2.8em; margin-bottom: 10px; text-align: center;" id="txt-sum-title">Koniec Sezonu!</h1>
             
             <div class="summary-box">
-                <h2 style="margin: 0; color: #3498db; font-size: 1.5em;">Ocena Menedżera:</h2>
-                <h1 id="manager-grade" style="font-size: 3.5em; margin: 10px 0; color: #2ecc71;">S+</h1>
-                <p id="manager-desc" style="font-size: 1.2em; color: #ecf0f1; margin: 0;">Zbudowałeś drużynę marzeń i zdobyłeś mistrzostwo!</p>
+                <h2 style="margin: 0; color: #3498db; font-size: 1.4em;" id="txt-sum-manager">Ocena Menedżera:</h2>
+                <h1 id="manager-grade" style="font-size: 3.5em; margin: 5px 0; color: #2ecc71;">S+</h1>
+                <p id="manager-desc" style="font-size: 1.1em; color: #ecf0f1; margin: 0;"></p>
             </div>
 
-            <h3 style="color: var(--court-lines); text-align: left; margin-bottom: 10px; font-size: 1.4em;">Sumaryczne Statystyki Zawodniczek (Cały Sezon)</h3>
+            <h3 style="color: var(--court-lines); text-align: left; margin-bottom: 10px; font-size: 1.3em;" id="txt-sum-stats-title">Statystyki Sezonowe Twojego Zespołu</h3>
             <div style="width: 100%; overflow-x: auto; margin-bottom: 20px;">
                 <table class="stats-table-live">
                     <thead>
                         <tr>
-                            <th>ZAWODNIK</th>
-                            <th>PKT<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Suma w sezonie</span></th>
-                            <th>ZAGRYWKA<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Asy | Błędy</span></th>
-                            <th>PRZYJĘCIE<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Tot | Err | Poz% | Exc%</span></th>
-                            <th>ATAK<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Tot|Err|Blk|Pkt|Skut%|Eff%</span></th>
-                            <th>BLOK<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Punkty</span></th>
+                            <th id="txt-sum-th-player">ZAWODNIK</th>
+                            <th id="txt-sum-th-pkt">PKT<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Suma</span></th>
+                            <th id="txt-sum-th-srv">ZAGRYWKA<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Asy | Błędy</span></th>
+                            <th id="txt-sum-th-prz">PRZYJĘCIE<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Tot | Err | Poz% | Exc%</span></th>
+                            <th id="txt-sum-th-atk">ATAK<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Pkt | Skut% | Eff%</span></th>
+                            <th id="txt-sum-th-blk">BLOK<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Punkty</span></th>
                         </tr>
                     </thead>
                     <tbody id="season-stats-body"></tbody>
                 </table>
             </div>
 
-            <button onclick="location.reload()" style="width: 100%; padding: 15px; font-size: 1.5em; background-color: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; border-radius: 8px;">Rozpocznij Nową Karierę (Draft) 🔄</button>
+            <button onclick="location.reload()" style="width: 100%; padding: 15px; font-size: 1.4em; background-color: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; border-radius: 10px;" id="txt-sum-btn-restart">Rozpocznij Nową Karierę (Draft) 🔄</button>
         </div>
     </div>
 
-    <h1 style="font-size: 1.8em;">Volley Draft 🏐</h1>
+    <h1 style="font-size: 1.8em; text-transform: uppercase; font-weight: 900; letter-spacing: 1px;">Volley Draft Pro 🏐</h1>
 
     <div class="top-section">
-        <div class="trainer-panel">
-            <h2 style="font-size: 1.2em;">Sztab</h2>
+        <div class="trainer-panel glass-panel">
+            <h2 style="font-size: 1.1em; color: #3498db;" id="txt-panel-sztab">Sztab</h2>
             <p id="current-trainer" style="font-weight: bold; font-size: 1em; margin: 5px 0;">Trwa wybór...</p>
             <p style="font-size: 0.9em; color: #f1c40f; margin: 0;" id="trainer-bonus">Bonus: ???</p>
         </div>
-        <div class="draft-panel">
-            <h2 id="team-display-name" style="color: #2ecc71; margin-bottom: 5px; font-size: 1.6em;">Mój Zespół</h2>
-            <h3 style="margin-top:0; font-size: 1.1em;">Dostępna Drużyna: <span id="drawn-team-name" style="color: #f1c40f;">Losowanie...</span></h3>
-            <div style="background-color: #34495e; display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.8em; margin-top: 2px;">
-                <label style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
+        
+        <div class="draft-panel glass-panel">
+            <h2 id="team-display-name" style="color: #2ecc71; margin-bottom: 2px; font-size: 1.4em;">Mój Zespół</h2>
+            <h3 style="margin-top:0; font-size: 1em;" id="txt-drawn-team-label">Dostępna Drużyna: <span id="drawn-team-name" style="color: #f1c40f;">Losowanie...</span></h3>
+            <div style="background-color: rgba(255,255,255,0.05); display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.8em; margin-top: 2px; border: 1px solid var(--glass-border);">
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 5px;" id="txt-label-ovr">
                     <input type="checkbox" id="toggle-ovr" checked onchange="renderPlayers()" style="cursor: pointer;"> Pokaż OVR
                 </label>
             </div>
             <div id="available-players"></div>
             <button id="btn-skip" class="btn-action">Pomiń Drużynę (3)</button>
         </div>
-        <div class="stats-panel">
-            <h2>Statystyki</h2>
+        
+        <div class="stats-panel glass-panel">
+            <h2 style="font-size: 1.1em; color: #3498db;" id="txt-panel-stats">Statystyki</h2>
             <div class="stats-container-grid">
                 <div class="stat-line"><span>OVR:</span> <span id="team-ovr" style="color: #f1c40f;">0</span></div>
-                <div class="stat-line"><span>Atak:</span> <span id="team-atk">0</span></div>
-                <div class="stat-line"><span>Blok:</span> <span id="team-blk">0</span></div>
-                <div class="stat-line"><span>Przyjęcie:</span> <span id="team-prz">0</span></div>
-                <div class="stat-line"><span>Obrona:</span> <span id="team-obr">0</span></div>
-                <div class="stat-line"><span>Serwis:</span> <span id="team-srv" style="color: #f1c40f;">0%</span></div>
+                <div class="stat-line"><span id="txt-stat-atk">Atak:</span> <span id="team-atk">0</span></div>
+                <div class="stat-line"><span id="txt-stat-blk">Blok:</span> <span id="team-blk">0</span></div>
+                <div class="stat-line"><span id="txt-stat-prz">Przyjęcie:</span> <span id="team-prz">0</span></div>
+                <div class="stat-line"><span id="txt-stat-obr">Obrona:</span> <span id="team-obr">0</span></div>
+                <div class="stat-line"><span id="txt-stat-srv">Serwis:</span> <span id="team-srv" style="color: #f1c40f;">0%</span></div>
             </div>
         </div>
     </div>
 
     <div class="court-container">
-        <h2 style="color: #333; text-align: center; margin-bottom: 5px; font-size: 1.2em;">Parkiet (Siódemka)</h2>
+        <h2 style="color: #fff; text-align: center; margin-bottom: 8px; font-size: 1.1em; font-weight: bold;" id="txt-court-title">Parkiet (Twoja Siódemka)</h2>
         <div class="volleyball-court">
             <div class="attack-line"></div>
             <div class="player-slot" id="slot-Przyjmujący2">Przyjmująca 2<br><span>Puste</span></div>
@@ -248,7 +376,7 @@
             <div class="player-slot" id="slot-Atakujący">Atakująca<br><span>Puste</span></div>
         </div>
         <div style="display: flex; justify-content: center; margin-top: 10px;">
-            <div class="player-slot" id="slot-Środkowy2" style="background-color: var(--card-bg); width: 180px; color: white;">Środkowa 2<br><span>Puste</span></div>
+            <div class="player-slot" id="slot-Środkowy2" style="background-color: rgba(20,20,35,0.8); width: 180px; color: white; border-color: var(--glass-border);">Środkowa 2<br><span>Puste</span></div>
         </div>
     </div>
 
@@ -256,51 +384,56 @@
         <div class="modal-inner">
             <div class="result-header">
                 <div>
-                    <h2 id="final-my-team" style="color: #2ecc71; font-size: 1.8em;">Mój Zespół</h2>
-                    <span id="score-my" style="color: white; font-weight: bold; font-size: 3.5em;">0</span>
+                    <h2 id="final-my-team" style="color: #2ecc71; font-size: 1.6em;">Mój Zespół</h2>
+                    <span id="score-my" style="color: white; font-weight: bold; font-size: 3.2em;">0</span>
                 </div>
                 <div>
-                    <h3 style="color: #f1c40f; margin: 0; font-size: 1.4em;">Sety</h3>
-                    <div style="font-weight: bold; background: #1a1a2e; padding: 5px 20px; border-radius: 10px; font-size: 2.5em;">
+                    <h3 style="color: #f1c40f; margin: 0; font-size: 1.2em;" id="txt-match-sets">Sety</h3>
+                    <div style="font-weight: bold; background: #07070f; padding: 5px 20px; border-radius: 10px; font-size: 2.2em; border: 1px solid var(--glass-border);">
                         <span id="sets-my" style="color: #2ecc71;">0</span> : <span id="sets-opp" style="color: #e74c3c;">0</span>
                     </div>
                 </div>
                 <div>
-                    <h2 id="opponent-name-final" style="color: #e74c3c; font-size: 1.8em;">Przeciwnik</h2>
-                    <span id="score-opp" style="color: white; font-weight: bold; font-size: 3.5em;">0</span>
+                    <h2 id="opponent-name-final" style="color: #e74c3c; font-size: 1.6em;">Przeciwnik</h2>
+                    <span id="score-opp" style="color: white; font-weight: bold; font-size: 3.2em;">0</span>
                 </div>
             </div>
             
-            <div id="time-controls">
-                <button onclick="changeSpeed(1000)" style="background-color: #34495e; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em; padding: 10px 20px;">▶ Normalne</button>
-                <button onclick="changeSpeed(100)" style="background-color: #e67e22; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em; padding: 10px 20px;">⏩ Szybko</button>
-                <button onclick="instantSimulation()" style="background-color: #9b59b6; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em; padding: 10px 20px;">⚡ Wynik</button>
+            <div id="time-controls" style="display: flex; align-items: center; justify-content: center;">
+                <button onclick="changeSpeed(1000)" style="background-color: #1c1c3a; color: white; border: 1px solid var(--glass-border); border-radius: 6px; cursor: pointer; padding: 10px 15px;" id="txt-btn-speed-normal">▶ Normalne</button>
+                <button onclick="changeSpeed(100)" style="background-color: #e67e22; color: white; border: none; border-radius: 6px; cursor: pointer; padding: 10px 15px;" id="txt-btn-speed-fast">⏩ Szybko</button>
+                <button onclick="instantSimulation()" style="background-color: #9b59b6; color: white; border: none; border-radius: 6px; cursor: pointer; padding: 10px 15px;" id="txt-btn-speed-inst">⚡ Wynik</button>
+                
+                <button id="btn-timeout-trigger" class="btn-timeout" onclick="callTimeout()">⏱ TIME-OUT</button>
             </div>
             
             <div id="play-by-play">Relacja na żywo...</div>
-            <h3 style="color: #f1c40f; text-align: left; margin-bottom: 8px; font-size: 1.3em;">Raport Meczowy (Live)</h3>
+            
+            <div id="set-pause-container" style="display: none; text-align: center; margin: 10px 0; padding: 10px; background: rgba(241,196,15,0.1); border: 1px solid #f1c40f; border-radius: 8px;">
+                <span id="txt-set-pause-msg" style="font-weight: bold; color: #f1c40f; font-size: 1.1em; margin-right: 15px;">Koniec seta. Przygotuj taktykę.</span>
+                <button id="btn-next-set-continue" style="background-color: #2ecc71; color: white; padding: 8px 20px; border: none; font-weight: bold; border-radius: 5px; cursor: pointer;">Rozpocznij Następny Set ➔</button>
+            </div>
+
+            <h3 style="color: #f1c40f; text-align: left; margin-bottom: 8px; font-size: 1.2em;" id="txt-match-report-live-title">Raport Meczowy (Live)</h3>
             
             <div style="width: 100%; overflow-x: auto;">
                 <table class="stats-table-live">
                     <thead>
                         <tr>
-                            <th>ZAWODNIK</th>
-                            <th>PKT<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Tot|BP|W-L</span></th>
-                            <th>ZAGRYWKA<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Tot|Err|Ace</span></th>
-                            <th>PRZYJĘCIE<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Tot|Err|Poz%|Exc%</span></th>
-                           <th>ATAK<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Tot|Err|Blk|Pkt|Skut%|Eff%</span></th>
-                            <th>BLOK<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Pkt</span></th>
+                            <th id="txt-live-th-player">ZAWODNIK</th>
+                            <th id="txt-live-th-pkt">PKT<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Tot|BP|W-L</span></th>
+                            <th id="txt-live-th-srv">ZAGRYWKA<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Tot|Err|Ace</span></th>
+                            <th id="txt-live-th-prz">PRZYJĘCIE<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Tot|Err|Poz%|Exc%</span></th>
+                            <th id="txt-live-th-atk">ATAK<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Tot|Err|Blk|Pkt|Skut%|Eff%</span></th>
+                            <th id="txt-live-th-blk">BLOK<br><span style="font-size: 0.8em; font-weight: normal; color: #bdc3c7;">Pkt</span></th>
                         </tr>
                     </thead>
                     <tbody id="stats-table-body"></tbody>
                 </table>
             </div>
             
-            <button id="btn-return-hub" onclick="returnToSeasonHub()" style="display: none; width: 100%; margin-top: 15px; font-size: 1.3em; padding: 15px; background-color: #27ae60; color: white; border: none; cursor: pointer; font-weight: bold; border-radius: 8px;">Wróć do Ligi 📊</button>
+            <button id="btn-return-hub" onclick="returnToSeasonHub()" style="display: none; width: 100%; margin-top: 15px; font-size: 1.2em; padding: 15px; background-color: #27ae60; color: white; border: none; cursor: pointer; font-weight: bold; border-radius: 8px;">Wróć do Ligi 📊</button>
         </div>
     </div>
-    
-    <div id="error-log" style="color: red; position: fixed; top: 10px; left: 10px; z-index: 9999; font-weight: bold;"></div>
-    <script src="script.js"></script>
 </body>
 </html>
