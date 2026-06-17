@@ -2,64 +2,138 @@
 // VOLLEY DRAFT PRO - SŁOWNIK JĘZYKOWY (7 JĘZYKÓW)
 // ============================================================================
 // === ZAZNACZ I PODMIEŃ OD TEGO MIEJSCA ===
+// === ZAZNACZ I PODMIEŃ OD TEGO MIEJSCA ===
 const i18n = {
     pl: {
         statAtk: "Atak:", statBlk: "Blok:", statPrz: "Przyjęcie:", statObr: "Obrona:", statSrv: "Serwis:", statTec: "Technika:",
         setPauseMsg: "Koniec seta! Odpocznij i dostosuj taktykę.", btnNextSetCont: "Kontynuuj mecz ➔",
-        btnNextMatch: "Rozegraj następny mecz ➔", btnSimToEnd: "Symuluj do końca", sumBtnRestart: "Zagraj ponownie ↻"
+        btnNextMatch: "Rozegraj następny mecz ➔", btnSimToEnd: "Symuluj do końca", sumBtnRestart: "Zagraj ponownie ↻",
+        descWin: "Mistrzostwo! Zbudowałeś legendarny zespół.", descFin: "Srebrny medal. Zabrakło tylko jednego kroku.", descSemi: "Półfinał. Solidny sezon, ale jest niedosyt.", descBad: "Rozczarowanie. Brak awansu do strefy medalowej.",
+        roundText: "Runda", coachSelectTitle: "Wybierz głównego trenera:", btnReroll: "Losuj ponownie 🎲",
+        instTitle: "🏐 Instrukcja", instBody: "1. Wybierz ligę i wpisz nazwę zespołu.<br>2. Zatrudnij trenera z bonusem.<br>3. Skompletuj skład z historycznych kart.<br>4. Zdobywaj mistrzostwa!", btnCoachNext: "Wybierz Trenera ➔",
+        tacticOff: "Ofensywa", tacticDef: "Defensywa", tacticCtrl: "Kontrola",
+        speedNorm: "Normalnie", speedFast: "Szybko", speedInst: "Natychmiast",
+        thPlayer: "ZAWODNIK", thPts: "PKT", thSrv: "ZAGRYWKA", thRec: "PRZYJĘCIE", thAtk: "ATAK", thBlk: "BLOK",
+        seasonComplete: "Koniec Sezonu!", managerRating: "Ocena Menedżera:", leagueTable: "Tabela Ligowa"
     },
     en: {
         statAtk: "Attack:", statBlk: "Block:", statPrz: "Reception:", statObr: "Defense:", statSrv: "Serve:", statTec: "Technique:",
         setPauseMsg: "Set finished! Rest and adjust your tactics.", btnNextSetCont: "Continue match ➔",
-        btnNextMatch: "Play next match ➔", btnSimToEnd: "Simulate to end", sumBtnRestart: "Play again ↻"
+        btnNextMatch: "Play next match ➔", btnSimToEnd: "Simulate to end", sumBtnRestart: "Play again ↻",
+        descWin: "Championship! You built a legendary team.", descFin: "Silver medal. Just one step away from glory.", descSemi: "Semifinals. Solid season, but leaves you wanting more.", descBad: "Disappointment. Failed to reach the medal zone.",
+        roundText: "Round", coachSelectTitle: "Select your main coach:", btnReroll: "Reroll 🎲",
+        instTitle: "🏐 Instructions", instBody: "1. Choose league and team name.<br>2. Pick a coach with a tactical bonus.<br>3. Build your roster.<br>4. Win matches and claim the title!", btnCoachNext: "Choose Coach ➔",
+        tacticOff: "Offense", tacticDef: "Defense", tacticCtrl: "Control",
+        speedNorm: "Normal", speedFast: "Fast", speedInst: "Instant",
+        thPlayer: "PLAYER", thPts: "PTS", thSrv: "SERVE", thRec: "RECEP", thAtk: "ATTK", thBlk: "BLK",
+        seasonComplete: "Season Complete!", managerRating: "Manager Rating:", leagueTable: "League Table"
     },
-    zh: { // Chiński
+    zh: {
         statAtk: "进攻:", statBlk: "拦网:", statPrz: "接发球:", statObr: "防守:", statSrv: "发球:", statTec: "技术:",
         setPauseMsg: "局比赛结束！休息并调整战术。", btnNextSetCont: "继续比赛 ➔",
-        btnNextMatch: "进行下一 interim ➔", btnSimToEnd: "直接模拟结束", sumBtnRestart: "重新开始 ↻"
+        btnNextMatch: "进行下一 interim ➔", btnSimToEnd: "直接模拟结束", sumBtnRestart: "重新开始 ↻",
+        descWin: "总冠军！你建立了一支传奇球队。", descFin: "银牌。距离荣耀仅一步之遥。", descSemi: "半决赛。踏实的赛季，但留有遗憾。", descBad: "令人失望。未能进入奖牌区。",
+        roundText: "轮次", coachSelectTitle: "选择你的主教练:", btnReroll: "重新轮换 🎲",
+        instTitle: "🏐 说明", instBody: "1. 选择联赛并输入球队名称。<br>2. 选择具有战术加成的教练。<br>3. 组建你的阵容。<br>4. 赢得比赛并夺得冠军！", btnCoachNext: "选择教练 ➔",
+        tacticOff: "进攻", tacticDef: "防守", tacticCtrl: "控制",
+        speedNorm: "正常", speedFast: "快速", speedInst: "立即",
+        thPlayer: "球员", thPts: "得分", thSrv: "发球", thRec: "一传", thAtk: "扣球", thBlk: "拦网",
+        seasonComplete: "赛季结束！", managerRating: "经理评级:", leagueTable: "联赛积分榜"
     },
-    ja: { // Japoński
+    ja: {
         statAtk: "アタック:", statBlk: "ブロック:", statPrz: "レシーブ:", statObr: "ディフェンス:", statSrv: "サーブ:", statTec: "テクニック:",
         setPauseMsg: "セット終了！息を整え、戦術を調整してください。", btnNextSetCont: "試合を続ける ➔",
-        btnNextMatch: "次の試合へ ➔", btnSimToEnd: "最後までシミュレート", sumBtnRestart: "もう一度プレイ ↻"
+        btnNextMatch: "次の試合へ ➔", btnSimToEnd: "最後までシミュレート", sumBtnRestart: "もう一度プレイ ↻",
+        descWin: "優勝！伝説的なチームを築き上げました。", descFin: "銀メダル。栄光まであと一歩でした。", descSemi: "準決勝進出。堅実なシーズンでしたが、悔しさが残ります。", descBad: "失望。メダル圏内に届きませんでした。",
+        roundText: "ラウンド", coachSelectTitle: "メインコーチを選択:", btnReroll: "再ドロー 🎲",
+        instTitle: "🏐 説明", instBody: "1. リーグを選び、チーム名を入力。<br>2. 戦術ボーナスを持つコーチを選択。<br>3. ロスターを構築。<br>4. 試合に勝ち、タイトルを獲得！", btnCoachNext: "コーチを選択 ➔",
+        tacticOff: "オフェンス", tacticDef: "ディフェンス", tacticCtrl: "コントロール",
+        speedNorm: "通常", speedFast: "高速", speedInst: "即時",
+        thPlayer: "選手", thPts: "得点", thSrv: "サーブ", thRec: "レシーブ", thAtk: "アタック", thBlk: "ブロック",
+        seasonComplete: "シーズン終了！", managerRating: "マネージャー評価:", leagueTable: "リーグ順位表"
     },
-    uk: { // Ukraiński
+    uk: {
         statAtk: "Атака:", statBlk: "Блок:", statPrz: "Прийом:", statObr: "Захист:", statSrv: "Подача:", statTec: "Техніка:",
         setPauseMsg: "Сет завершено! Відпочиньте та скоригуйте тактику.", btnNextSetCont: "Продовжити матч ➔",
-        btnNextMatch: "Зіграти наступний матч ➔", btnSimToEnd: "Симулювати до кінця", sumBtnRestart: "Грати знову ↻"
+        btnNextMatch: "Зіграти наступний матч ➔", btnSimToEnd: "Симулювати до кінця", sumBtnRestart: "Грати знову ↻",
+        descWin: "Чемпіонство! Ви створили легендарну команду.", descFin: "Срібна медаль. Всього один крок до слави.", descSemi: "Півфінал. Солідний сезон, але залишилося відчуття недосказанності.", descBad: "Розчарування. Не вдалося потрапити до медальної зони.",
+        roundText: "Раунд", coachSelectTitle: "Оберіть головного тренера:", btnReroll: "Перемішати 🎲",
+        instTitle: "🏐 Інструкція", instBody: "1. Оберіть лігу та введіть назву команди.<br>2. Оберіть тренера з тактичним бонусом.<br>3. Сформуйте свій склад.<br>4. Вигравайте матчі та здобувайте титул!", btnCoachNext: "Обрати тренера ➔",
+        tacticOff: "Атака", tacticDef: "Захист", tacticCtrl: "Контроль",
+        speedNorm: "Нормально", speedFast: "Швидко", speedInst: "Миттєво",
+        thPlayer: "ГРАВЕЦЬ", thPts: "ОЧКИ", thSrv: "ПОДАЧА", thRec: "ПРИЙОМ", thAtk: "АТАКА", thBlk: "БЛОК",
+        seasonComplete: "Сезон завершено!", managerRating: "Оцінка менеджера:", leagueTable: "Турнірна таблиця"
     },
-    es: { // Hiszpański
+    es: {
         statAtk: "Ataque:", statBlk: "Bloqueo:", statPrz: "Recepción:", statObr: "Defensa:", statSrv: "Saque:", statTec: "Técnica:",
         setPauseMsg: "¡Set terminado! Descansa y ajusta tus tácticas.", btnNextSetCont: "Continuar partido ➔",
-        btnNextMatch: "Jugar siguiente partido ➔", btnSimToEnd: "Simular hasta el final", sumBtnRestart: "Jugar de nuevo ↻"
+        btnNextMatch: "Jugar siguiente partido ➔", btnSimToEnd: "Simular hasta el final", sumBtnRestart: "Jugar de nuevo ↻",
+        descWin: "¡Campeones! Has construido un equipo de leyenda.", descFin: "Medalla de plata. A un solo paso de la gloria.", descSemi: "Semifinales. Una temporada sólida, pero con sabor a poco.", descBad: "Decepción. No alcanzaste las posiciones de medalla.",
+        roundText: "Ronda", coachSelectTitle: "Selecciona tu entrenador principal:", btnReroll: "Relanzar 🎲",
+        instTitle: "🏐 Instrucciones", instBody: "1. Elige liga y nombre del equipo.<br>2. Elige un entrenador con bono táctico.<br>3. Construye tu plantilla.<br>4. ¡Gana partidos y reclama el título!", btnCoachNext: "Elegir Entrenador ➔",
+        tacticOff: "Ofensiva", tacticDef: "Defensiva", tacticCtrl: "Control",
+        speedNorm: "Normal", speedFast: "Rápido", speedInst: "Instantáneo",
+        thPlayer: "JUGADOR", thPts: "PTS", thSrv: "SAQUE", thRec: "RECEP", thAtk: "ATK", thBlk: "BLQ",
+        seasonComplete: "¡Temporada Completa!", managerRating: "Calificación del Mánager:", leagueTable: "Tabla de la Liga"
     },
-    pt: { // Portugalski
+    pt: {
         statAtk: "Ataque:", statBlk: "Bloqueio:", statPrz: "Recepção:", statObr: "Defesa:", statSrv: "Saque:", statTec: "Técnica:",
         setPauseMsg: "Fim do set! Descanse e ajuste suas táticas.", btnNextSetCont: "Continuar partida ➔",
-        btnNextMatch: "Jogar próxima partida ➔", btnSimToEnd: "Simular até o fim", sumBtnRestart: "Jogar novamente ↻"
+        btnNextMatch: "Jogar próxima partida ➔", btnSimToEnd: "Simular até o fim", sumBtnRestart: "Jogar novamente ↻",
+        descWin: "Campeões! Você construiu uma equipe lendária.", descFin: "Medalha de prata. Apenas um passo longe da glória.", descSemi: "Semifinais. Temporada sólida, mas com um gosto de quero mais.", descBad: "Desapontamento. Falha em alcançar a zona de medalhas.",
+        roundText: "Rodada", coachSelectTitle: "Selecione o seu treinador principal:", btnReroll: "Rolar novamente 🎲",
+        instTitle: "🏐 Instruções", instBody: "1. Escolha a liga e o nome da equipe.<br>2. Escolha um treinador com bônus tático.<br>3. Monte seu elenco.<br>4. Ganhe partidas e conquiste o título!", btnCoachNext: "Escolher Treinador ➔",
+        tacticOff: "Ofensiva", tacticDef: "Defensiva", tacticCtrl: "Controle",
+        speedNorm: "Normal", speedFast: "Rápido", speedInst: "Instantâneo",
+        thPlayer: "JOGADOR", thPts: "PTS", thSrv: "SAQUE", thRec: "RECEP", thAtk: "ATQ", thBlk: "BLQ",
+        seasonComplete: "Temporada Concluída!", managerRating: "Avaliação do Manager:", leagueTable: "Tabela da Liga"
     },
-    it: { // Włoski
+    it: {
         statAtk: "Attacco:", statBlk: "Muro:", statPrz: "Ricezione:", statObr: "Difesa:", statSrv: "Battuta:", statTec: "Tecnica:",
         setPauseMsg: "Set concluso! Riposati e sistema la tattica.", btnNextSetCont: "Continua il match ➔",
-        btnNextMatch: "Prossimo match ➔", btnSimToEnd: "Simula fino alla fine", sumBtnRestart: "Gioca ancora ↻"
+        btnNextMatch: "Prossimo match ➔", btnSimToEnd: "Simula fino alla fine", sumBtnRestart: "Gioca ancora ↻",
+        descWin: "Campionato vinto! Hai creato un team leggendario.", descFin: "Medaglia d'argento. A un solo passo dalla gloria.", descSemi: "Semifinale. Buona stagione, ma resta un po' di amaro in bocca.", descBad: "Delusione. Mancato accesso alla zona medaglie.",
+        roundText: "Turno", coachSelectTitle: "Seleziona il tuo allenatore principale:", btnReroll: "Rilancia 🎲",
+        instTitle: "🏐 Istruzioni", instBody: "1. Scegli la lega e il nome della squadra.<br>2. Scegli un allenatore con un bonus tattico.<br>3. Costruisci la tua squadra.<br>4. Vinci i match e conquista il titolo!", btnCoachNext: "Scegli Allenatore ➔",
+        tacticOff: "Offensiva", tacticDef: "Difensiva", tacticCtrl: "Controllo",
+        speedNorm: "Normale", speedFast: "Veloce", speedInst: "Istantaneo",
+        thPlayer: "GIOCATORE", thPts: "PT", thSrv: "BATTUTA", thRec: "RICEZIONE", thAtk: "ATTACCO", thBlk: "MURO",
+        seasonComplete: "Stagione Completata!", managerRating: "Valutazione Manager:", leagueTable: "Classifica"
     },
-    de: { // Niemiecki
+    de: {
         statAtk: "Angriff:", statBlk: "Block:", statPrz: "Annahme:", statObr: "Abwehr:", statSrv: "Aufschlag:", statTec: "Technik:",
         setPauseMsg: "Satz beendet! Ruhe dich aus und passe deine Taktik an.", btnNextSetCont: "Match fortsetzen ➔",
-        btnNextMatch: "Nächstes Match spielen ➔", btnSimToEnd: "Bis zum Ende simulieren", sumBtnRestart: "Erneut spielen ↻"
+        btnNextMatch: "Nächstes Match spielen ➔", btnSimToEnd: "Bis zum Ende simulieren", sumBtnRestart: "Erneut spielen ↻",
+        descWin: "Meisterschaft! Du hast ein legendäres Team aufgebaut.", descFin: "Silbermedaille. Nur ein Schritt vom Ruhm entfernt.", descSemi: "Halbfinale. Solide Saison, aber es bleibt ein unbefriedigtes Gefühl.", descBad: "Enttäuschung. Medaillenränge verpasst.",
+        roundText: "Runde", coachSelectTitle: "Wähle deinen Haupttrainer aus:", btnReroll: "Neu auslosen 🎲",
+        instTitle: "🏐 Anleitung", instBody: "1. Wähle Liga und Teamnamen.<br>2. Wähle einen Trainer mit Taktikbonus.<br>3. Baue deinen Kader auf.<br>4. Gewinne Spiele und hole den Titel!", btnCoachNext: "Trainer wählen ➔",
+        tacticOff: "Offensive", tacticDef: "Defensive", tacticCtrl: "Kontrolle",
+        speedNorm: "Normal", speedFast: "Schnell", speedInst: "Sofort",
+        thPlayer: "SPIELER", thPts: "PKT", thSrv: "AUFSCHLAG", thRec: "ANNAHME", thAtk: "ANGRIFF", thBlk: "BLOCK",
+        seasonComplete: "Saison Beendet!", managerRating: "Manager-Bewertung:", leagueTable: "Ligatabelle"
     },
-    fr: { // Francuski
+    fr: {
         statAtk: "Attaque:", statBlk: "Bloc:", statPrz: "Réception:", statObr: "Défense:", statSrv: "Service:", statTec: "Technique:",
         setPauseMsg: "Fin du set ! Reposez-vous et ajustez vos tactiques.", btnNextSetCont: "Continuer le match ➔",
-        btnNextMatch: "Match suivant ➔", btnSimToEnd: "Simuler jusqu'à la fin", sumBtnRestart: "Rejouer ↻"
+        btnNextMatch: "Match suivant ➔", btnSimToEnd: "Simuler jusqu'à la fin", sumBtnRestart: "Rejouer ↻",
+        descWin: "Championnat ! Vous avez construit une équipe légendaire.", descFin: "Médaille d'argent. À un pas de la gloire.", descSemi: "Demi-finales. Saison solide, mais un goût d'inachevé.", descBad: "Déception. Échec de l'accès à la zone des médailles.",
+        roundText: "Tour", coachSelectTitle: "Sélectionnez votre entraîneur principal :", btnReroll: "Relancer 🎲",
+        instTitle: "🏐 Instructions", instBody: "1. Choisissez la ligue et le nom de l'équipe.<br>2. Choisissez un entraîneur avec un bonus tactique.<br>3. Construisez votre effectif.<br>4. Gagnez des matchs et décrochez le titre !", btnCoachNext: "Choisir Entraîneur ➔",
+        tacticOff: "Offensive", tacticDef: "Défensive", tacticCtrl: "Contrôle",
+        speedNorm: "Normal", speedFast: "Rapide", speedInst: "Instantané",
+        thPlayer: "JOUEUR", thPts: "PTS", thSrv: "SERVICE", thRec: "RÉCEPTION", thAtk: "ATTAQUE", thBlk: "BLOC",
+        seasonComplete: "Saison Terminée !", managerRating: "Évaluation du Manager :", leagueTable: "Classement"
     }
 };
+// === DO TEGO MIEJSCA WŁĄCZNIE ===
 // === DO TEGO MIEJSCA WŁĄCZNIE ===
 
 i18n.it = i18n.es = i18n.fr = i18n.de = i18n.pt = i18n.en;
 let currentLang = "pl";
 
 function safeSet(id, text, isHTML = false) { const el = document.getElementById(id); if (el) { if (isHTML) el.innerHTML = text; else el.innerText = text; } }
+function safeEl(id) { return document.getElementById(id); }
+function reportAppError(msg, detail) { console.error(msg, detail || ''); let debugEl = safeEl('play-by-play'); if (debugEl) { debugEl.innerHTML = `<span style="color:#e74c3c; font-weight:bold;">ERROR: ${msg}</span><br>` + debugEl.innerHTML; } }
 
 function getPosName(pos, lang) {
     let basePos = pos.replace(/[0-9]/g, '');
@@ -70,109 +144,84 @@ function getPosName(pos, lang) {
     return dict[lang] ? (dict[lang][basePos] || basePos) : (dict["en"][basePos] || basePos);
 }
 
+// === ZAZNACZ I PODMIEŃ OD TEGO MIEJSCA ===
+// === ZAZNACZ I PODMIEŃ OD TEGO MIEJSCA ===
 function switchLanguage(lang) {
     currentLang = lang;
-    const defaultLabels = {
-        modalTitle: "Volley Draft Pro",
-        instTitle: "Instructions",
-        instBody: "1. Choose league and team name.<br>2. Pick a coach with a tactical bonus.<br>3. Build your roster from historic squads.<br>4. Win matches and claim the title!",
-        instMail: "",
-        btnInstNext: "Choose Coach ➔",
-        coachSubtitle: "Select your main coach:",
-        placeholderTeam: "Enter team name...",
-        optMixed: "Mixed League (All)",
-        optCustom: "Custom Mix (Pick leagues...)",
-        panelSztab: "Staff",
-        panelStats: "Stats",
-        labelOvr: "<input type=\"checkbox\" id=\"toggle-ovr\" checked onchange=\"renderPlayers()\"> Show OVR",
-        btnSkip: "Skip Team",
-        btnReroll: "Reroll",
-        thTeam: "Team",
-        thW: "W",
-        thL: "L",
-        thSW: "SW",
-        thSL: "SL",
-        sumTitle: "Season Complete!",
-        sumManager: "Manager Rating:",
-        matchSets: "Sets",
-        btnSpeedNormal: "▶ Normal",
-        btnSpeedFast: "⏩ Fast",
-        btnSpeedInst: "⚡ Instant",
-        courtTitle: "Court (7 Players)",
-        drawnTeamLabel: "Available Team:",
-        thPlayer: "PLAYER",
-        thPkt: "PTS",
-        thSrv: "SERVE",
-        thPrz: "RECEP",
-        thAtk: "ATTK",
-        thBlk: "BLK",
-        tacOff: "Offense",
-        tacDef: "Defense",
-        tacCon: "Control",
-        ttOff: "Attack-focused tactic.",
-        ttDef: "Defense-focused tactic.",
-        ttCon: "Control-focused tactic.",
-        filterLeagues: "Leagues:",
-        filterSeasons: "Seasons:",
-        playoffTitle: "Playoffs",
-        descBad: "Your team struggled this season.",
-        descWin: "You won the championship!",
-        descFin: "Great run to the final.",
-        descSemi: "Strong season to the semis."
+    let t = i18n[lang] || i18n["en"]; 
+
+    // Słownik precyzyjnie dopasowany do ID w Twoim pliku index.html
+    const elementsToUpdate = {
+        "txt-inst-title": t.instTitle,
+        "txt-inst-body": t.instBody,
+        "btn-inst-next": t.btnCoachNext,
+        "txt-coach-title": t.coachSelectTitle,
+        "btn-reroll": t.btnReroll,
+        
+        // Taktyki i Prędkość
+        "btn-tac-ofensywa": "🔥 " + (t.tacticOff || "Offense"),
+        "btn-tac-defensywa": "🛡️ " + (t.tacticDef || "Defense"),
+        "btn-tac-kontrola": "🎯 " + (t.tacticCtrl || "Control"),
+        "txt-btn-speed-normal": "▶ " + (t.speedNorm || "Normal"),
+        "txt-btn-speed-fast": "⏩ " + (t.speedFast || "Fast"),
+        "txt-btn-speed-inst": "⚡ " + (t.speedInst || "Instant"),
+        
+        // Tabela w trakcie meczu (Live)
+        "txt-live-th-player": t.thPlayer || "PLAYER",
+        "txt-live-th-pkt": t.thPts || "PTS",
+        "txt-live-th-srv": t.thSrv || "SERVE",
+        "txt-live-th-prz": t.thRec || "RECEP",
+        "txt-live-th-atk": t.thAtk || "ATTK",
+        "txt-live-th-blk": t.thBlk || "BLK",
+        
+        // Tabela podsumowania sezonu (Koniec Gry)
+        "txt-sum-th-player": t.thPlayer || "PLAYER",
+        "txt-sum-th-grade": (lang === 'pl' ? "OCENA" : "GRADE"), 
+        "txt-sum-th-pkt": t.thPts || "PTS",
+        "txt-sum-th-srv": t.thSrv || "SERVE",
+        "txt-sum-th-prz": t.thRec || "RECEP",
+        "txt-sum-th-atk": t.thAtk || "ATTK",
+        "txt-sum-th-blk": t.thBlk || "BLK",
+        
+        // Główne ekrany i przyciski
+        "txt-sum-title": t.seasonComplete || "Season Complete!",
+        "txt-sum-manager": t.managerRating || "Manager Rating:",
+        "season-hub-title": t.leagueTable || "League Table",
+        "txt-sum-btn-restart": t.sumBtnRestart || "Play again ↻",
+        "btn-next-match": t.btnNextMatch || "Play next match ➔",
+        "txt-sum-stats-title": (lang === 'pl' ? "Statystyki Sezonowe i Oceny Zawodników" : "Season Stats & Player Grades"),
+        
+        // Nagłówki w tabeli ligowej
+        "txt-th-team": (lang === 'pl' ? "Zespół" : "Team"),
+        "txt-th-w": (lang === 'pl' ? "Z" : "W"),
+        "txt-th-l": (lang === 'pl' ? "P" : "L"),
+        "txt-th-sw": (lang === 'pl' ? "Sety W" : "Sets W"),
+        "txt-th-sl": (lang === 'pl' ? "Sety P" : "Sets L")
     };
-    const t = Object.assign({}, defaultLabels, i18n[lang] || i18n["en"]);
-    document.querySelectorAll(".lang-btn").forEach(btn => { if (btn.getAttribute("data-lang") === lang) btn.classList.add("active"); else btn.classList.remove("active"); });
-    
-    try { safeSet("txt-coach-title", t.modalTitle); } catch(e){}
-    try { safeSet("txt-inst-title", t.instTitle); } catch(e){}
-    try { safeSet("txt-inst-body", t.instBody, true); } catch(e){}
-    try { safeSet("txt-inst-mail", t.instMail); } catch(e){}
-    try { safeSet("btn-inst-next", t.btnInstNext); } catch(e){}
-    try { safeSet("txt-coach-subtitle", t.coachSubtitle); } catch(e){}
-    
-    const inputTeam = document.getElementById("team-name-input"); if(inputTeam) inputTeam.placeholder = t.placeholderTeam;
-    
-    try { safeSet("txt-opt-mixed", t.optMixed); } catch(e){}
-    try { safeSet("txt-opt-custom", t.optCustom); } catch(e){}
-    
-    try { safeSet("txt-panel-sztab", t.panelSztab); } catch(e){}
-    try { safeSet("txt-panel-stats", t.panelStats); } catch(e){}
-    try { safeSet("txt-label-ovr", `<input type="checkbox" id="toggle-ovr" checked onchange="renderPlayers()"> ${t.labelOvr}`, true); } catch(e){}
-    
-    const btnSkip = document.getElementById("btn-skip"); if(btnSkip) btnSkip.innerText = `${t.btnSkip} (${skipsLeft})`;
-    const btnReroll = document.getElementById("btn-reroll"); if(btnReroll) btnReroll.innerText = `${t.btnReroll} 🎲`;
-    
-    try { safeSet("txt-th-team", t.thTeam); safeSet("txt-th-w", t.thW); safeSet("txt-th-l", t.thL); safeSet("txt-th-sw", t.thSW); safeSet("txt-th-sl", t.thSL); } catch(e){}
-    try { safeSet("txt-sum-title", t.sumTitle); safeSet("txt-sum-manager", t.sumManager); safeSet("txt-sum-btn-restart", t.sumBtnRestart); } catch(e){}
-    try { safeSet("txt-match-sets", t.matchSets); safeSet("txt-btn-speed-normal", t.btnSpeedNormal); safeSet("txt-btn-speed-fast", t.btnSpeedFast); safeSet("txt-btn-speed-inst", t.btnSpeedInst); } catch(e){}
-    try { safeSet("txt-set-pause-msg", t.setPauseMsg); safeSet("btn-next-set-continue", t.btnNextSetCont); safeSet("txt-court-title", t.courtTitle); } catch(e){}
-    try { safeSet("txt-drawn-team-label", `${t.drawnTeamLabel} <span id="drawn-team-name" style="color: #00a8ff;">${currentTeam ? currentTeam.teamName : '...'}</span>`, true); } catch(e){}
-    
-    try { safeSet("txt-stat-atk", t.statAtk); safeSet("txt-stat-blk", t.statBlk); safeSet("txt-stat-prz", t.statPrz); safeSet("txt-stat-obr", t.statObr); safeSet("txt-stat-srv", t.statSrv); } catch(e){}
-    try { safeSet("txt-live-th-player", t.thPlayer); safeSet("txt-live-th-pkt", t.thPkt); safeSet("txt-live-th-srv", t.thSrv); safeSet("txt-live-th-prz", t.thPrz); safeSet("txt-live-th-atk", t.thAtk); safeSet("txt-live-th-blk", t.thBlk); } catch(e){}
-    try { safeSet("txt-sum-th-player", t.thPlayer); safeSet("txt-sum-th-pkt", t.thPkt); safeSet("txt-sum-th-srv", t.thSrv); safeSet("txt-sum-th-prz", t.thPrz); safeSet("txt-sum-th-atk", t.thAtk); safeSet("txt-sum-th-blk", t.thBlk); } catch(e){}
-    
-    try { safeSet("txt-tac-off", t.tacOff); safeSet("txt-tac-def", t.tacDef); safeSet("txt-tac-con", t.tacCon); } catch(e){}
-    
-    try {
-        let to = document.getElementById("tt-off"); if(to) to.setAttribute("data-tooltip", t.ttOff);
-        let td = document.getElementById("tt-def"); if(td) td.setAttribute("data-tooltip", t.ttDef);
-        let tc = document.getElementById("tt-con"); if(tc) tc.setAttribute("data-tooltip", t.ttCon);
-    } catch(e){}
 
-    try { updateFiltersLabels(t); } catch(e){}
-    try { renderCourt(); } catch(e){}
-    try { if (currentTeam) renderPlayers(); } catch(e){}
-    try { if (season.isPlayoffs) { renderPlayoffHub(); } else { if(season.teams.length > 0) renderLeagueTable(); } } catch(e){}
-    try { if (currentCoach) { safeSet("trainer-bonus", "Bonus: " + currentCoach.bonusText); } } catch(e){}
-}
+    for (let id in elementsToUpdate) {
+        let el = document.getElementById(id);
+        if (el && elementsToUpdate[id]) el.innerHTML = elementsToUpdate[id];
+    }
 
-function updateFiltersLabels(t) {
-    try {
-        const lgTitle = document.getElementById("filter-lg-title"); if(lgTitle) lgTitle.innerText = t.filterLeagues || "Ligi:";
-        const szTitle = document.getElementById("filter-sz-title"); if(szTitle) szTitle.innerText = t.filterSeasons || "Sezony:";
-    } catch(e){}
+    let roundInfo = document.getElementById("season-round-info");
+    if (roundInfo && typeof season !== 'undefined') {
+        roundInfo.innerText = (t.roundText || "Round") + ": " + (season.currentRound || 1) + " / 7";
+    }
+
+    let managerDesc = document.getElementById("manager-desc");
+    if (managerDesc && typeof season !== 'undefined') {
+        if (season.champion === teamName) managerDesc.innerText = t.descWin || i18n["en"].descWin;
+        else if (season.playerExitStage === "RUNDA FINAŁOWA") managerDesc.innerText = t.descFin || i18n["en"].descFin;
+        else if (season.playerExitStage === "PÓŁFINAŁY") managerDesc.innerText = t.descSemi || i18n["en"].descSemi;
+        else managerDesc.innerText = t.descBad || i18n["en"].descBad;
+    }
+
+    renderCoaches();
+    if (typeof updateRosterDisplay === "function") updateRosterDisplay();
 }
+// === DO TEGO MIEJSCA WŁĄCZNIE ===
+// === DO TEGO MIEJSCA WŁĄCZNIE ===
 
 // ============================================================================
 // BAZY DANYCH (MINIMALISTYCZNE TESTOWE - GOTOWE DO WKLEJANIA DUŻYCH BLOKÓW)
@@ -777,6 +826,9 @@ window.onload = function() {
     };
 
     const btnSkip = document.getElementById("btn-skip"); if(btnSkip) btnSkip.onclick = skipTeam;
+    switchLanguage(currentLang);
+    window.addEventListener('error', function(event) { reportAppError('Unhandled error', event.message || event); });
+    window.addEventListener('unhandledrejection', function(event) { reportAppError('Unhandled promise rejection', event.reason || event); });
 };
 
 // Funkcja wywoływana z poziomu pierwszego okna
@@ -937,6 +989,7 @@ function drawNextTeam() {
 
 function renderPlayers() {
     const container = document.getElementById("available-players"); if(!container) return; container.innerHTML = ""; 
+    if (!currentTeam || !Array.isArray(currentTeam.players)) { return; }
     const toggleOvr = document.getElementById("toggle-ovr");
     const showOvr = toggleOvr ? toggleOvr.checked : false;
     currentTeam.players.forEach(player => {
@@ -1051,7 +1104,7 @@ function showSeasonHub() {
             safeSet("season-round-info", "Koniec Sezonu");
             document.getElementById("btn-next-match").innerText = "Play-Off 🏆"; document.getElementById("btn-next-match").onclick = setupPlayoffs;
         } else {
-            safeSet("season-round-info", `${i18n[currentLang].roundInfo}: ${season.currentRound + 1} / 7`);
+            safeSet("season-round-info", `${i18n[currentLang].roundText}: ${season.currentRound + 1} / 7`);
             document.getElementById("btn-next-match").innerText = i18n[currentLang].btnNextMatch; document.getElementById("btn-next-match").onclick = playLeagueRound;
         }
         renderLeagueTable();
@@ -1066,7 +1119,13 @@ function renderLeagueTable() {
 }
 
 function playLeagueRound() {
-    let matches = season.schedule[season.currentRound]; document.getElementById("season-hub-modal").style.display = "none";
+    let matches = season.schedule[season.currentRound];
+    if (!matches || !Array.isArray(matches)) {
+        reportAppError('Brak zaplanowanych meczów dla tej kolejki.');
+        showSeasonHub();
+        return;
+    }
+    document.getElementById("season-hub-modal").style.display = "none";
     matches.forEach(matchInfo => {
         let t1 = season.teams[matchInfo[0]], t2 = season.teams[matchInfo[1]];
         if (t1.isPlayer || t2.isPlayer) { season.myCurrentOpponent = t1.isPlayer ? t2 : t1; setupPlayerMatch(season.myCurrentOpponent); } 
@@ -1109,6 +1168,7 @@ function applyTacticBoost(baseStat, actionType, isMe) {
 }
 
 function setupPlayerMatch(opponent) {
+    if (!opponent) { reportAppError('Unable to start match: opponent data missing.'); showSeasonHub(); return; }
     for (let pos in myRoster) { let p = myRoster[pos]; if (p) matchStats[p.name] = { name: p.name, pos: p.pos, ptsTot: 0, ptsBP: 0, wl: 0, srvTot: 0, srvErr: 0, srvAce: 0, przTot: 0, przErr: 0, przExc: 0, przPoz: 0, atkTot: 0, atkErr: 0, atkBlk: 0, atkPkt: 0, blkPkt: 0 }; }
     mySets = 0; oppSets = 0; myScore = 0; oppScore = 0; matchFinished = false; tacticalTimeout.available = true; isMatchPlaying = false; isSetPaused = false;
     
@@ -1150,6 +1210,7 @@ function callTimeout() {
 function playSinglePoint() {
     let pointForMe = false, actionLog = "";
     const myPlayersArr = Object.values(myRoster).filter(p => p !== null);
+    if (myPlayersArr.length === 0) { reportAppError('No players assigned to roster for match simulation.'); matchFinished = true; return { pointForMe: false, actionLog: 'No roster available.' }; }
     let oppOVR = season.myCurrentOpponent ? season.myCurrentOpponent.avgOvr : 75;
 
     // Bezpieczne pobieranie statystyk, nawet gdy panel jest ukryty (textContent)
@@ -1400,7 +1461,8 @@ function updateSeasonStats() {
 function returnToSeasonHub() {
     updateSeasonStats(); document.getElementById("result-modal").style.display = "none"; document.getElementById("tactics-container").style.display = "flex"; setTacticState(true);
     if(!season.isPlayoffs) {
-        updateStandings(teamName, season.myCurrentOpponent.teamName, mySets, oppSets); season.currentRound++;
+        if (season.myCurrentOpponent) { updateStandings(teamName, season.myCurrentOpponent.teamName, mySets, oppSets); }
+        season.currentRound++;
         if (season.currentRound === 7 && !season.regularSeasonFinished) { season.regularSeasonFinished = true; showSeasonHub(); } 
         else if (season.currentRound > 7 || (season.currentRound === 7 && season.regularSeasonFinished)) { setupPlayoffs(); } 
         else { showSeasonHub(); }
@@ -1504,14 +1566,41 @@ function processPlayoffResult() {
     showSeasonHub();
 }
 
+// === ZAZNACZ I PODMIEŃ OD TEGO MIEJSCA ===
 function showSeasonSummary(champion) {
-    document.getElementById("season-hub-modal").style.display = "none"; document.getElementById("result-modal").style.display = "none"; document.getElementById("season-summary-modal").style.display = "flex";
-    let t = i18n[currentLang];
-    let grade = "C", color = "#e74c3c", desc = t.descBad;
-    if (champion === teamName) { grade = "S+"; color = "#f1c40f"; desc = t.descWin; } else if (season.playerExitStage === "RUNDA FINAŁOWA") { grade = "A"; color = "#2ecc71"; desc = t.descFin; } else if (season.playerExitStage === "PÓŁFINAŁY") { grade = "B"; color = "#00a8ff"; desc = t.descSemi; }
-    safeSet("manager-grade", grade); document.getElementById("manager-grade").style.color = color; safeSet("manager-desc", desc);
+    document.getElementById("season-hub-modal").style.display = "none"; 
+    document.getElementById("result-modal").style.display = "none"; 
+    document.getElementById("season-summary-modal").style.display = "flex";
     
-    const tbody = document.getElementById("season-stats-body"); tbody.innerHTML = "";
+    // Bezpieczne ładowanie języka: jeśli obecnego języka nie ma w i18n, użyj angielskiego
+    let t = i18n[currentLang] || i18n["en"];
+    
+    // Ustalanie oceny menedżera
+    let grade = "C", color = "#e74c3c";
+    let desc = t.descBad || i18n["en"].descBad; // Fallback na angielski w razie braku klucza
+    
+    if (champion === teamName) { 
+        grade = "S+"; 
+        color = "#f1c40f"; 
+        desc = t.descWin || i18n["en"].descWin; 
+    } else if (season.playerExitStage === "RUNDA FINAŁOWA") { 
+        grade = "A"; 
+        color = "#2ecc71"; 
+        desc = t.descFin || i18n["en"].descFin; 
+    } else if (season.playerExitStage === "PÓŁFINAŁY") { 
+        grade = "B"; 
+        color = "#00a8ff"; 
+        desc = t.descSemi || i18n["en"].descSemi; 
+    }
+    
+    safeSet("manager-grade", grade); 
+    document.getElementById("manager-grade").style.color = color; 
+    safeSet("manager-desc", desc);
+    
+    const tbody = document.getElementById("season-stats-body"); 
+    if(!tbody) return; // Ochrona przed brakiem tabeli w dokumencie
+    tbody.innerHTML = "";
+    
     Object.values(seasonStats).sort((a,b) => b.ptsTot - a.ptsTot).forEach(s => {
         let pGrade = "C", gColor = "#e74c3c";
         if (s.pos === "Libero") { let exc = s.przTot > 0 ? (s.przExc / s.przTot) * 100 * 0.4 : 0; if(exc > 30) pGrade = "S"; else if(exc > 22) pGrade = "A"; else if(exc > 15) pGrade = "B"; } 
@@ -1521,7 +1610,10 @@ function showSeasonSummary(champion) {
         if(pGrade === "S") gColor = "#f1c40f"; if(pGrade === "A") gColor = "#2ecc71"; if(pGrade === "B") gColor = "#00a8ff";
 
         let pName = getPosName(s.pos, currentLang);
-        let przPozPct = s.przTot > 0 ? Math.round((s.przPoz / s.przTot) * 100 * 0.65) + "%" : "-"; let przExcPct = s.przTot > 0 ? Math.round((s.przExc / s.przTot) * 100 * 0.4) + "%" : "-"; let atkExcPct = s.atkTot > 0 ? Math.round((s.atkPkt / s.atkTot) * 100) + "%" : "-"; let atkEffPct = s.atkTot > 0 ? Math.round(((s.atkPkt - s.atkErr - s.atkBlk) / s.atkTot) * 100) + "%" : "-";
+        let przPozPct = s.przTot > 0 ? Math.round((s.przPoz / s.przTot) * 100 * 0.65) + "%" : "-"; 
+        let przExcPct = s.przTot > 0 ? Math.round((s.przExc / s.przTot) * 100 * 0.4) + "%" : "-"; 
+        let atkExcPct = s.atkTot > 0 ? Math.round((s.atkPkt / s.atkTot) * 100) + "%" : "-"; 
+        let atkEffPct = s.atkTot > 0 ? Math.round(((s.atkPkt - s.atkErr - s.atkBlk) / s.atkTot) * 100) + "%" : "-";
         
         tbody.innerHTML += `<tr>
             <td style="text-align: left; font-weight: bold;">${s.name} <br><span style="font-size:0.7em; color:#bdc3c7;">${pName}</span></td>
@@ -1533,6 +1625,8 @@ function showSeasonSummary(champion) {
             <td><strong style="color:#e67e22; font-size:1.2em;">${s.blkPkt}</strong></td>
         </tr>`;
     });
+}
+// === DO TEGO MIEJSCA WŁĄCZNIE ===
     window.initLanguage = function(lang) {
     console.log("Wybrano język: " + lang); // Komunikat diagnostyczny
     
@@ -1555,4 +1649,3 @@ function showSeasonSummary(champion) {
         console.error("Krytyczny błąd: Funkcja switchLanguage nie istnieje w kodzie!");
     }
 };
-}
