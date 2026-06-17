@@ -71,7 +71,56 @@ function getPosName(pos, lang) {
 }
 
 function switchLanguage(lang) {
-    currentLang = lang; const t = i18n[lang] || i18n["en"];
+    currentLang = lang;
+    const defaultLabels = {
+        modalTitle: "Volley Draft Pro",
+        instTitle: "Instructions",
+        instBody: "1. Choose league and team name.<br>2. Pick a coach with a tactical bonus.<br>3. Build your roster from historic squads.<br>4. Win matches and claim the title!",
+        instMail: "",
+        btnInstNext: "Choose Coach ➔",
+        coachSubtitle: "Select your main coach:",
+        placeholderTeam: "Enter team name...",
+        optMixed: "Mixed League (All)",
+        optCustom: "Custom Mix (Pick leagues...)",
+        panelSztab: "Staff",
+        panelStats: "Stats",
+        labelOvr: "<input type=\"checkbox\" id=\"toggle-ovr\" checked onchange=\"renderPlayers()\"> Show OVR",
+        btnSkip: "Skip Team",
+        btnReroll: "Reroll",
+        thTeam: "Team",
+        thW: "W",
+        thL: "L",
+        thSW: "SW",
+        thSL: "SL",
+        sumTitle: "Season Complete!",
+        sumManager: "Manager Rating:",
+        matchSets: "Sets",
+        btnSpeedNormal: "▶ Normal",
+        btnSpeedFast: "⏩ Fast",
+        btnSpeedInst: "⚡ Instant",
+        courtTitle: "Court (7 Players)",
+        drawnTeamLabel: "Available Team:",
+        thPlayer: "PLAYER",
+        thPkt: "PTS",
+        thSrv: "SERVE",
+        thPrz: "RECEP",
+        thAtk: "ATTK",
+        thBlk: "BLK",
+        tacOff: "Offense",
+        tacDef: "Defense",
+        tacCon: "Control",
+        ttOff: "Attack-focused tactic.",
+        ttDef: "Defense-focused tactic.",
+        ttCon: "Control-focused tactic.",
+        filterLeagues: "Leagues:",
+        filterSeasons: "Seasons:",
+        playoffTitle: "Playoffs",
+        descBad: "Your team struggled this season.",
+        descWin: "You won the championship!",
+        descFin: "Great run to the final.",
+        descSemi: "Strong season to the semis."
+    };
+    const t = Object.assign({}, defaultLabels, i18n[lang] || i18n["en"]);
     document.querySelectorAll(".lang-btn").forEach(btn => { if (btn.getAttribute("data-lang") === lang) btn.classList.add("active"); else btn.classList.remove("active"); });
     
     try { safeSet("txt-coach-title", t.modalTitle); } catch(e){}
@@ -888,7 +937,8 @@ function drawNextTeam() {
 
 function renderPlayers() {
     const container = document.getElementById("available-players"); if(!container) return; container.innerHTML = ""; 
-    const showOvr = document.getElementById("toggle-ovr")?.checked;
+    const toggleOvr = document.getElementById("toggle-ovr");
+    const showOvr = toggleOvr ? toggleOvr.checked : false;
     currentTeam.players.forEach(player => {
         const card = document.createElement("div");
         let tierClass = "card-bronze", badgeClass = "badge-bronze";
