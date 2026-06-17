@@ -1533,4 +1533,26 @@ function showSeasonSummary(champion) {
             <td><strong style="color:#e67e22; font-size:1.2em;">${s.blkPkt}</strong></td>
         </tr>`;
     });
+    window.initLanguage = function(lang) {
+    console.log("Wybrano język: " + lang); // Komunikat diagnostyczny
+    
+    // 1. Ukrywamy ekran wyboru języka
+    const langModal = document.getElementById('lang-modal');
+    if (langModal) {
+        langModal.style.display = 'none';
+    }
+    
+    // 2. Pokazujemy ekran startowy (Instrukcja i Liga)
+    const instModal = document.getElementById('inst-modal');
+    if (instModal) {
+        instModal.style.display = 'flex';
+    }
+    
+    // 3. Tłumaczymy interfejs na wybrany język
+    if (typeof switchLanguage === "function") {
+        switchLanguage(lang);
+    } else {
+        console.error("Krytyczny błąd: Funkcja switchLanguage nie istnieje w kodzie!");
+    }
+};
 }
