@@ -1,40 +1,60 @@
 // ============================================================================
 // VOLLEY DRAFT PRO - SŁOWNIK JĘZYKOWY (7 JĘZYKÓW)
 // ============================================================================
+// === ZAZNACZ I PODMIEŃ OD TEGO MIEJSCA ===
 const i18n = {
     pl: {
-        modalTitle: "Panel Zarządzania", instTitle: "🏐 Instrukcja", instBody: "1. Wybierz ligę i sezony w panelu kontrolnym.<br>2. Zatrudnij trenera z odpowiednim profilem analitycznym.<br>3. Zbuduj kadrę 7 zawodników z losowanych pakietów.<br>4. Kontroluj parametry meczowe i zdobądź tytuł.", instMail: "📩 Kontakt techniczny: volleydraftpro@gmail.com", btnInstNext: "Wybierz Trenera ➔",
-        placeholderTeam: "Nazwa klubu...", panelSztab: "Sztab", panelStats: "Statystyki", labelOvr: "Wyświetl OVR", btnSkip: "Pomiń pakiet", btnReroll: "Zmień sztab",
-        thTeam: "Zespół", thW: "Z", thL: "P", thSW: "Sety W", thSL: "Sety P", roundInfo: "Kolejka", btnNextMatch: "Uruchom Spotkanie", playoffTitle: "FAZA PUCHAROWA",
-        sumTitle: "Podsumowanie Sezonu", sumManager: "Ocena Zarządu:", sumBtnRestart: "Nowy Projekt (Draft) 🔄", coachSubtitle: "Wybierz profil trenera:",
-        matchSets: "Sety", btnSpeedNormal: "▶ Analiza (X1)", btnSpeedFast: "⏩ Analiza (X5)", btnSpeedInst: "⚡ Generuj Wynik", 
-        setPauseMsg: "Koniec seta. Zmień wytyczne taktyczne.", btnNextSetCont: "Rozpocznij Następny Set ➔", timeoutPauseMsg: "Przerwa taktyczna. Dostosuj system gry.", btnResumeMatch: "Wznów Spotkanie ▶", 
-        drawnTeamLabel: "Pakiet z klubu:", courtTitle: "Pozycje na parkiecie", emptySlot: "Nieobsadzona",
-        statAtk: "Atak:", statBlk: "Blok:", statPrz: "Przyjęcie:", statObr: "Obrona:", statSrv: "Serwis:",
-        thPlayer: "ZAWODNIK", thPkt: "PKT", thSrv: "ZAGRYWKA", thPrz: "PRZYJĘCIE", thAtk: "ATAK", thBlk: "BLOK", btnSimToEnd: "Symuluj fazę pucharową ⏩",
-        tacOff: "Ofensywa", ttOff: "Zwiększenie ryzyka w polu zagrywki i pierwszej akcji. Wyższa siła ognia kosztem stabilizacji.",
-        tacDef: "Defensywa", ttDef: "Zgrupowanie bloku do skrzydeł i obniżenie pozycji w obronie. Maksymalizacja szans na kontratak.",
-        tacCon: "Kontrola", ttCon: "Skupienie na dokładności rozegrania i unikanie trudnych kierunków. Redukcja błędów własnych.",
-        descWin: "CEL OSIĄGNIĘTY: Mistrzostwo ligi zdobyte. Kadra zrealizowała założenia taktyczne w 100%.", descFin: "Wicemistrzostwo. Awans do wielkiego finału potwierdza wysoki potencjał zespołu.", descSemi: "Półfinał. Solidna baza pod budowę struktur na kolejny rok.", descBad: "Wynik poniżej oczekiwań. Wymagana głęboka analiza struktury draftu.",
-        filterLeagues: "Dostępne ligi:", filterSeasons: "Zakres historyczny:", optMixed: "Liga Mieszana (Wszystkie)", optCustom: "Własny Mix (Wybierz...)"
+        statAtk: "Atak:", statBlk: "Blok:", statPrz: "Przyjęcie:", statObr: "Obrona:", statSrv: "Serwis:", statTec: "Technika:",
+        setPauseMsg: "Koniec seta! Odpocznij i dostosuj taktykę.", btnNextSetCont: "Kontynuuj mecz ➔",
+        btnNextMatch: "Rozegraj następny mecz ➔", btnSimToEnd: "Symuluj do końca", sumBtnRestart: "Zagraj ponownie ↻"
     },
     en: {
-        modalTitle: "Management Panel", instTitle: "🏐 Manual", instBody: "1. Select league and seasons on top control bar.<br>2. Hire a coach with the right analytical profile.<br>3. Draft your roster of 7 players from packages.<br>4. Control match settings and win the Championship.", instMail: "📩 Technical support: volleydraftpro@gmail.com", btnInstNext: "Select Coach ➔",
-        placeholderTeam: "Club name...", panelSztab: "Staff", panelStats: "Stats", labelOvr: "Show OVR", btnSkip: "Skip Pack", btnReroll: "Reroll Coaches",
-        thTeam: "Team", thW: "W", thL: "L", thSW: "Sets W", thSL: "Sets L", roundInfo: "Round", btnNextMatch: "Launch Match", playoffTitle: "PLAY-OFF BRACKET",
-        sumTitle: "Season Summary", sumManager: "Board Grade:", sumBtnRestart: "New Project (Draft) 🔄", coachSubtitle: "Select Coach Profile:",
-        matchSets: "Sets", btnSpeedNormal: "▶ Analysis (X1)", btnSpeedFast: "⏩ Analysis (X5)", btnSpeedInst: "⚡ Generate Result", 
-        setPauseMsg: "Set finished. Update tactical settings.", btnNextSetCont: "Start Next Set ➔", timeoutPauseMsg: "Tactical timeout. Adjust system parameters.", btnResumeMatch: "Resume Match ▶", 
-        drawnTeamLabel: "Club package:", courtTitle: "Court Positions", emptySlot: "Unassigned",
-        statAtk: "Attack:", statBlk: "Block:", statPrz: "Reception:", statObr: "Defense:", statSrv: "Serve:",
-        thPlayer: "PLAYER", thPkt: "PTS", thSrv: "SERVE", thPrz: "RECEPTION", thAtk: "ATTACK", thBlk: "BLOCK", btnSimToEnd: "Simulate Playoffs ⏩",
-        tacOff: "Offense", ttOff: "Increased risk in serving and first attack. Higher firepower at the expense of stability.",
-        tacDef: "Defense", ttDef: "Shifting block towards pins and lowering defensive posture. Maximizes transition opportunities.",
-        tacCon: "Control", ttCon: "Focus on set accuracy and smart hitting angles. Minimizes unforced errors.",
-        descWin: "OBJECTIVE ACHIEVED: League Championship secured. Roster executed the game plan flawlessly.", descFin: "Runners-up. Reaching the final confirms the high potential of the roster.", descSemi: "Semifinal. Solid foundation for next season's structural development.", descBad: "Result below expectations. Deep draft strategy review required.",
-        filterLeagues: "Leagues:", filterSeasons: "Seasons range:", optMixed: "Mixed League (All)", optCustom: "Custom Mix (Choose...)"
+        statAtk: "Attack:", statBlk: "Block:", statPrz: "Reception:", statObr: "Defense:", statSrv: "Serve:", statTec: "Technique:",
+        setPauseMsg: "Set finished! Rest and adjust your tactics.", btnNextSetCont: "Continue match ➔",
+        btnNextMatch: "Play next match ➔", btnSimToEnd: "Simulate to end", sumBtnRestart: "Play again ↻"
+    },
+    zh: { // Chiński
+        statAtk: "进攻:", statBlk: "拦网:", statPrz: "接发球:", statObr: "防守:", statSrv: "发球:", statTec: "技术:",
+        setPauseMsg: "局比赛结束！休息并调整战术。", btnNextSetCont: "继续比赛 ➔",
+        btnNextMatch: "进行下一 interim ➔", btnSimToEnd: "直接模拟结束", sumBtnRestart: "重新开始 ↻"
+    },
+    ja: { // Japoński
+        statAtk: "アタック:", statBlk: "ブロック:", statPrz: "レシーブ:", statObr: "ディフェンス:", statSrv: "サーブ:", statTec: "テクニック:",
+        setPauseMsg: "セット終了！息を整え、戦術を調整してください。", btnNextSetCont: "試合を続ける ➔",
+        btnNextMatch: "次の試合へ ➔", btnSimToEnd: "最後までシミュレート", sumBtnRestart: "もう一度プレイ ↻"
+    },
+    uk: { // Ukraiński
+        statAtk: "Атака:", statBlk: "Блок:", statPrz: "Прийом:", statObr: "Захист:", statSrv: "Подача:", statTec: "Техніка:",
+        setPauseMsg: "Сет завершено! Відпочиньте та скоригуйте тактику.", btnNextSetCont: "Продовжити матч ➔",
+        btnNextMatch: "Зіграти наступний матч ➔", btnSimToEnd: "Симулювати до кінця", sumBtnRestart: "Грати знову ↻"
+    },
+    es: { // Hiszpański
+        statAtk: "Ataque:", statBlk: "Bloqueo:", statPrz: "Recepción:", statObr: "Defensa:", statSrv: "Saque:", statTec: "Técnica:",
+        setPauseMsg: "¡Set terminado! Descansa y ajusta tus tácticas.", btnNextSetCont: "Continuar partido ➔",
+        btnNextMatch: "Jugar siguiente partido ➔", btnSimToEnd: "Simular hasta el final", sumBtnRestart: "Jugar de nuevo ↻"
+    },
+    pt: { // Portugalski
+        statAtk: "Ataque:", statBlk: "Bloqueio:", statPrz: "Recepção:", statObr: "Defesa:", statSrv: "Saque:", statTec: "Técnica:",
+        setPauseMsg: "Fim do set! Descanse e ajuste suas táticas.", btnNextSetCont: "Continuar partida ➔",
+        btnNextMatch: "Jogar próxima partida ➔", btnSimToEnd: "Simular até o fim", sumBtnRestart: "Jogar novamente ↻"
+    },
+    it: { // Włoski
+        statAtk: "Attacco:", statBlk: "Muro:", statPrz: "Ricezione:", statObr: "Difesa:", statSrv: "Battuta:", statTec: "Tecnica:",
+        setPauseMsg: "Set concluso! Riposati e sistema la tattica.", btnNextSetCont: "Continua il match ➔",
+        btnNextMatch: "Prossimo match ➔", btnSimToEnd: "Simula fino alla fine", sumBtnRestart: "Gioca ancora ↻"
+    },
+    de: { // Niemiecki
+        statAtk: "Angriff:", statBlk: "Block:", statPrz: "Annahme:", statObr: "Abwehr:", statSrv: "Aufschlag:", statTec: "Technik:",
+        setPauseMsg: "Satz beendet! Ruhe dich aus und passe deine Taktik an.", btnNextSetCont: "Match fortsetzen ➔",
+        btnNextMatch: "Nächstes Match spielen ➔", btnSimToEnd: "Bis zum Ende simulieren", sumBtnRestart: "Erneut spielen ↻"
+    },
+    fr: { // Francuski
+        statAtk: "Attaque:", statBlk: "Bloc:", statPrz: "Réception:", statObr: "Défense:", statSrv: "Service:", statTec: "Technique:",
+        setPauseMsg: "Fin du set ! Reposez-vous et ajustez vos tactiques.", btnNextSetCont: "Continuer le match ➔",
+        btnNextMatch: "Match suivant ➔", btnSimToEnd: "Simuler jusqu'à la fin", sumBtnRestart: "Rejouer ↻"
     }
 };
+// === DO TEGO MIEJSCA WŁĄCZNIE ===
 
 i18n.it = i18n.es = i18n.fr = i18n.de = i18n.pt = i18n.en;
 let currentLang = "pl";
@@ -677,28 +697,28 @@ let isSetPaused = false, isMatchPlaying = false;
 // NOWA INICJALIZACJA STRONY (ZABEZPIECZONA)
 // ============================================================================
 window.onload = function() {
-    // 1. Inicjalizacja filtrów
     renderCustomLeagueCheckboxes();
     
-    // 2. Obsługa zmiany ligi
     const dbPicker = document.getElementById("league-db-picker");
-    dbPicker.addEventListener("change", function(e) {
-        const val = e.target.value;
-        const clc = document.getElementById("filters-container");
-        if(val === "custom" || val === "mixed") {
-            clc.style.display = "block";
-            updateCustomDatabase();
-        } else {
-            clc.style.display = "none";
-            let allSeasons = Object.keys(databases[val] || {});
-            loadDatabase([val], allSeasons);
-        }
-    });
+    if(dbPicker) {
+        dbPicker.addEventListener("change", function(e) {
+            const val = e.target.value;
+            const clc = document.getElementById("filters-container");
+            if(val === "custom" || val === "mixed") {
+                clc.style.display = "block";
+                updateCustomDatabase();
+            } else {
+                clc.style.display = "none";
+                let allSeasons = Object.keys(databases[val] || {});
+                loadDatabase([val], allSeasons);
+            }
+        });
+    }
     
-    // 3. Ładowanie domyślne
-    loadDatabase(["TauronLiga"], Object.keys(databases["TauronLiga"]));
+    if(databases["TauronLiga"]) {
+        loadDatabase(["TauronLiga"], Object.keys(databases["TauronLiga"]));
+    }
     
-    // 4. Przycisk Dalej
     document.getElementById("btn-inst-next").onclick = function() { 
         document.getElementById("inst-modal").style.display = "none"; 
         document.getElementById("coach-modal").style.display = "flex"; 
@@ -707,11 +727,38 @@ window.onload = function() {
         document.getElementById("team-display-name").innerText = teamName;
     };
 
-    const btnSkip = document.getElementById("btn-skip"); 
-    if(btnSkip) btnSkip.onclick = skipTeam;
-    
-    switchLanguage("pl");
+    const btnSkip = document.getElementById("btn-skip"); if(btnSkip) btnSkip.onclick = skipTeam;
 };
+
+// Funkcja wywoływana z poziomu pierwszego okna
+function initLanguage(lang) {
+    document.getElementById('lang-modal').style.display = 'none';
+    document.getElementById('inst-modal').style.display = 'flex';
+    switchLanguage(lang);
+}
+
+// Globalny nasłuchiwacz na klawisz ENTER
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        
+        // Zbieramy główne przyciski akcji
+        const btnInstNext = document.getElementById('btn-inst-next');
+        const btnStartLeague = document.getElementById('btn-start-league-now');
+        const btnNextMatch = document.getElementById('btn-next-match');
+        const btnSetPause = document.getElementById('btn-next-set-continue');
+        const btnReturnHub = document.getElementById('btn-return-hub');
+        const btnRestart = document.getElementById('txt-sum-btn-restart');
+
+        // Sprawdzamy który modal jest aktywny (offsetParent !== null) i klikamy
+        if (btnInstNext && btnInstNext.offsetParent !== null) btnInstNext.click();
+        else if (btnStartLeague && btnStartLeague.offsetParent !== null) btnStartLeague.click();
+        else if (btnSetPause && btnSetPause.offsetParent !== null) btnSetPause.click();
+        else if (btnReturnHub && btnReturnHub.offsetParent !== null) btnReturnHub.click();
+        else if (btnNextMatch && btnNextMatch.offsetParent !== null) btnNextMatch.click();
+        else if (btnRestart && btnRestart.offsetParent !== null) btnRestart.click();
+    }
+});
 
 function renderCustomLeagueCheckboxes() {
     const container = document.getElementById("filters-container"); if(!container) return;
@@ -757,6 +804,7 @@ function loadDatabase(leaguesArray, seasonsArray) {
     availableTeams = [...activeDatabase]; rerollsLeft = 1; renderCoaches(); 
 }
 
+// === ZAZNACZ I PODMIEŃ OD TEGO MIEJSCA ===
 function renderCoaches() {
     let availableCoaches = [];
     let selectedLg = []; 
@@ -789,10 +837,23 @@ function renderCoaches() {
     if(!container) return; 
     container.innerHTML = "";
     
+    // Pobranie aktualnego zestawu tłumaczeń na podstawie aktywnego języka gry
+    let t = i18n[currentLang] || i18n["en"];
+    
     options.forEach(coach => {
         const btn = document.createElement("div"); 
         btn.className = "coach-card";
-        btn.innerHTML = `<span style="font-size:1.1em;"><strong>${coach.name}</strong></span><span style="color: #00a8ff; font-size: 0.9em; text-align:center; margin-top:5px;">Bonus: ${coach.bonusText}</span>`;
+        
+        // Dynamiczne i bezpieczne tłumaczenie tekstu bonusu bez uszkadzania struktury obiektu trenera
+        let translatedBonus = coach.bonusText
+            .replace("Obrona", t.statObr ? t.statObr.replace(":", "") : "Obrona")
+            .replace("Blok", t.statBlk ? t.statBlk.replace(":", "") : "Blok")
+            .replace("Atak", t.statAtk ? t.statAtk.replace(":", "") : "Atak")
+            .replace("Serwis", t.statSrv ? t.statSrv.replace(":", "") : "Serwis")
+            .replace("Przyjęcie", t.statPrz ? t.statPrz.replace(":", "") : "Przyjęcie")
+            .replace("Technika", t.statTec ? t.statTec.replace(":", "") : "Technika");
+
+        btn.innerHTML = `<span style="font-size:1.1em;"><strong>${coach.name}</strong></span><span style="color: #00a8ff; font-size: 0.9em; text-align:center; margin-top:5px;">Bonus: ${translatedBonus}</span>`;
         btn.onclick = () => selectCoach(coach); 
         container.appendChild(btn);
     });
@@ -810,6 +871,7 @@ function renderCoaches() {
         }; 
     }
 }
+// === DO TEGO MIEJSCA WŁĄCZNIE ===
 
 function selectCoach(selected) {
     currentCoach = selected; document.getElementById("current-trainer").innerText = currentCoach.name;
