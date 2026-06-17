@@ -158,23 +158,23 @@
         <div style="font-weight: bold; color: var(--court-lines); font-size: 1.2em;">Volley Draft Pro</div>
     </div>
 
-   <div id="lang-modal" class="modal-overlay" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
+ <div id="lang-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0b16; z-index: 999999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
     <h1 style="color: var(--court-lines); font-size: 2.5em; margin-bottom: 10px; text-align: center;">Volley Draft Pro</h1>
     <h2 style="margin-bottom: 25px; color: #bdc3c7; font-size: 1.2em; text-align: center;">Select Language / Wybierz język</h2>
     
     <div class="lang-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; max-width: 500px;">
-        <button class="btn-action" style="font-size: 1.1em; padding: 12px;" onclick="initLanguage('pl')">🇵🇱 PL</button>
-        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #34495e;" onclick="initLanguage('en')">🇬🇧 EN</button>
-        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50;" onclick="initLanguage('zh')">🇨🇳 中文</button>
-        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50;" onclick="initLanguage('ja')">🇯🇵 日本語</button>
-        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50;" onclick="initLanguage('uk')">🇺🇦 UA</button>
-        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50;" onclick="initLanguage('es')"><span>🇪🇸 ES</span></button>
-        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50;" onclick="initLanguage('pt')">🇵🇹 PT</button>
-        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50;" onclick="initLanguage('it')">🇮🇹 IT</button>
-        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50;" onclick="initLanguage('de')">🇩🇪 DE</button>
-        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50;" onclick="initLanguage('fr')">🇫🇷 FR</button>
+        <button class="btn-action" style="font-size: 1.1em; padding: 12px; cursor: pointer;" onclick="initLanguage('pl')">🇵🇱 PL</button>
+        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #34495e; cursor: pointer;" onclick="initLanguage('en')">🇬🇧 EN</button>
+        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50; cursor: pointer;" onclick="initLanguage('zh')">🇨🇳 中文</button>
+        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50; cursor: pointer;" onclick="initLanguage('ja')">🇯🇵 日本語</button>
+        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50; cursor: pointer;" onclick="initLanguage('uk')">🇺🇦 UA</button>
+        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50; cursor: pointer;" onclick="initLanguage('es')">🇪🇸 ES</button>
+        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50; cursor: pointer;" onclick="initLanguage('pt')">🇵🇹 PT</button>
+        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50; cursor: pointer;" onclick="initLanguage('it')">🇮🇹 IT</button>
+        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50; cursor: pointer;" onclick="initLanguage('de')">🇩🇪 DE</button>
+        <button class="btn-action" style="font-size: 1.1em; padding: 12px; background-color: #2c3e50; cursor: pointer;" onclick="initLanguage('fr')">🇫🇷 FR</button>
     </div>
-</div> 
+</div>
 
     <div id="inst-modal" class="modal-overlay" style="display: none;">
         <h1 style="color: var(--court-lines); font-size: 2.5em; margin-bottom: 20px;">Volley Draft Pro</h1>
